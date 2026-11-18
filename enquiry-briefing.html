@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Northgo · Enquiry form briefing</title>
+  <style>
+    :root {
+      --navy: #071a33;
+      --ink: #122033;
+      --muted: #5d6d80;
+      --line: #d7e0ea;
+      --paper: #f4f7fb;
+      --cyan: #14c8d6;
+      --cyan-deep: #0aa3b0;
+      --ok: #0e6b56;
+      --bad: #9b2c2c;
+      --font: "Segoe UI", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      color: var(--ink);
+      background: var(--paper);
+    }
+    button, a { font: inherit; }
+    button { cursor: pointer; }
+    .top, .bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 22px;
+    }
+    .top { background: var(--navy); color: #fff; }
+    .brand { font-weight: 700; letter-spacing: -0.03em; }
+    .brand span { color: var(--cyan); }
+    .langs, .nav { display: flex; gap: 8px; align-items: center; }
+    .langs button, .nav button {
+      min-height: 44px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.25);
+      background: transparent;
+      color: #fff;
+      padding: 0 14px;
+    }
+    .langs button[aria-pressed="true"] { background: var(--cyan); color: var(--navy); border-color: var(--cyan); }
+    .deck { height: calc(100% - 128px); padding: 18px 22px 8px; }
+    .slide {
+      height: 100%;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: clamp(20px, 3vw, 40px);
+      overflow: auto;
+    }
+    .slide:not([hidden]) { display: flex; flex-direction: column; }
+    .kicker { margin: 0 0 8px; color: var(--cyan-deep); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: .75rem; }
+    h1 { margin: 0 0 12px; color: var(--navy); font-size: clamp(1.8rem, 4vw, 3rem); letter-spacing: -0.04em; line-height: 1.05; }
+    h2 { margin: 0 0 8px; color: var(--navy); letter-spacing: -0.03em; font-size: clamp(1.4rem, 2.4vw, 2rem); }
+    p { margin: 0 0 12px; max-width: 78ch; }
+    .muted { color: var(--muted); }
+    table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--navy); font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; }
+    .tag { display: inline-block; border-radius: 999px; padding: 2px 8px; font-size: .78rem; font-weight: 700; }
+    .req { background: #e7f8fa; color: var(--cyan-deep); }
+    .opt { background: var(--paper); color: var(--muted); }
+    .flow { width: 100%; height: auto; }
+    .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; color: var(--muted); font-size: .9rem; }
+    .swatch { display: inline-block; width: 28px; height: 0; border-top: 3px solid var(--navy); margin-right: 6px; vertical-align: middle; }
+    .swatch.dash { border-top-style: dashed; border-top-color: var(--cyan-deep); }
+    .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .card { border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; }
+    .card b { display: block; color: var(--navy); margin-bottom: 6px; }
+    .ok { color: var(--ok); }
+    .bad { color: var(--bad); }
+    .bar { background: #fff; border-top: 1px solid var(--line); }
+    .nav button { border-color: var(--line); color: var(--navy); background: #fff; }
+    .nav button:disabled { opacity: .4; cursor: default; }
+    .count { color: var(--muted); min-width: 4.5rem; text-align: center; }
+    .countries { color: var(--muted); font-size: .88rem; line-height: 1.6; }
+    @media (max-width: 800px) {
+      .cards { grid-template-columns: 1fr; }
+      .top, .bar { padding-inline: 12px; }
+      .deck { padding: 10px; height: calc(100% - 136px); }
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="brand">North<span>go</span> · <span data-i18n="doc">詢價簡報</span></div>
+    <div class="langs" role="group" aria-label="Language">
+      <button type="button" data-set-lang="zh-tw" aria-pressed="true">繁中</button>
+      <button type="button" data-set-lang="en">EN</button>
+    </div>
+  </header>
+  <main class="deck">
+    <section class="slide">
+      <p class="kicker" data-i18n="kicker">Enquiry form · contact page</p>
+      <h1 data-i18n="title">詢價表單作業流程</h1>
+      <p data-i18n="lede">欄位以 www.northgo.com/contact 的「How can we help?」表單為準。這份簡報說明訪客怎麼填、網站怎麼檢查，以及送出成功後建議怎麼分派。</p>
+      <p class="muted" data-i18n="source">來源頁最後發佈：2025-09-12。成功句為 Thank you! Your submission has been received! 失敗句為 Oops! Something went wrong while submitting the form.</p>
+    </section>
+
+    <section class="slide">
+      <p class="kicker">01</p>
+      <h2 data-i18n="s1">表單上的欄位</h2>
+      <table>
+        <thead>
+          <tr>
+            <th data-i18n="colField">欄位</th>
+            <th data-i18n="colControl">控制</th>
+            <th data-i18n="colRule">規則</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>First name</td><td data-i18n="text">單行文字</td><td><span class="tag req" data-i18n="required">必填</span></td></tr>
+          <tr><td>Last name</td><td data-i18n="text">單行文字</td><td><span class="tag req" data-i18n="required">必填</span></td></tr>
+          <tr><td>Company</td><td data-i18n="text">單行文字</td><td><span class="tag req" data-i18n="required">必填</span></td></tr>
+          <tr><td>Email</td><td data-i18n="email">電子郵件</td><td><span class="tag req" data-i18n="required">必填</span></td></tr>
+          <tr><td>Phone number</td><td data-i18n="tel">電話</td><td><span class="tag req" data-i18n="required">必填</span></td></tr>
+          <tr><td>Country</td><td data-i18n="select">下拉，含 Select one...</td><td><span class="tag req" data-i18n="required">必填</span></td></tr>
+          <tr><td data-i18n="servicesQ">What services are you interested in?</td><td data-i18n="checks">五個核取方塊，可複選</td><td><span class="tag opt" data-i18n="optional">未強制</span></td></tr>
+          <tr><td>Message</td><td data-i18n="area">多行，最多 5000 字。提示 Type your message...</td><td><span class="tag req" data-i18n="required">必填</span></td></tr>
+          <tr><td data-i18n="terms">I accept the Terms</td><td data-i18n="check">核取方塊，Terms 連到條款</td><td><span class="tag req" data-i18n="required">必填</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="slide">
+      <p class="kicker">02</p>
+      <h2 data-i18n="s2">服務選項與國家</h2>
+      <div class="cards">
+        <article class="card">
+          <b data-i18n="svcTitle">可複選的服務</b>
+          <p data-i18n="svcBody">Freight Logistics、Project Logistics、Warehouse Logistics、Shipping Agency、Other。官網沒有要求至少勾一項。都沒勾時，作業上視為一般詢價。</p>
+        </article>
+        <article class="card">
+          <b data-i18n="countryTitle">Country 必須改離 Select one...</b>
+          <p class="countries">Argentina, Australia, Brazil, Chile, China, Canada, Denmark, France, Germany, Greece, India, Indonesia, Italy, Japan, Mexico, Malaysia, Netherlands, New Zealand, Philippines, Poland, Qatar, Spain, Singapore, South Africa, South Korea, Sweden, Saudi Arabia, Thailand, Türkiye, Taiwan, United States, United Kingdom, Vietnam.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="slide">
+      <p class="kicker">03</p>
+      <h2 data-i18n="s3">表單流程</h2>
+      <svg class="flow" viewBox="0 0 1180 520" role="img">
+        <title data-i18n="svgTitle">詢價表單流程</title>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0 0 L8 4 L0 8 Z" fill="#071a33"/>
+          </marker>
+          <marker id="arrow-c" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0 0 L8 4 L0 8 Z" fill="#0aa3b0"/>
+          </marker>
+        </defs>
+        <rect x="20" y="36" width="150" height="64" rx="12" fill="#071a33"/>
+        <rect x="230" y="36" width="150" height="64" rx="12" fill="#fff" stroke="#071a33" stroke-width="2"/>
+        <rect x="440" y="28" width="160" height="80" rx="12" fill="#e7f8fa" stroke="#0aa3b0" stroke-width="2"/>
+        <rect x="670" y="36" width="150" height="64" rx="12" fill="#fff" stroke="#071a33" stroke-width="2"/>
+        <rect x="890" y="28" width="160" height="80" rx="12" fill="#e7f8fa" stroke="#0aa3b0" stroke-width="2"/>
+        <rect x="440" y="200" width="160" height="72" rx="12" fill="#fff" stroke="#9b2c2c" stroke-width="2"/>
+        <rect x="700" y="210" width="180" height="72" rx="12" fill="#fff" stroke="#0e6b56" stroke-width="2"/>
+        <rect x="960" y="210" width="180" height="72" rx="12" fill="#fff" stroke="#9b2c2c" stroke-width="2"/>
+        <rect x="700" y="370" width="220" height="72" rx="12" fill="#fff" stroke="#0aa3b0" stroke-width="2" stroke-dasharray="6 4"/>
+        <line x1="170" y1="68" x2="230" y2="68" stroke="#071a33" stroke-width="2" marker-end="url(#arrow)"/>
+        <line x1="380" y1="68" x2="440" y2="68" stroke="#071a33" stroke-width="2" marker-end="url(#arrow)"/>
+        <line x1="600" y1="68" x2="670" y2="68" stroke="#071a33" stroke-width="2" marker-end="url(#arrow)"/>
+        <line x1="820" y1="68" x2="890" y2="68" stroke="#071a33" stroke-width="2" marker-end="url(#arrow)"/>
+        <line x1="520" y1="108" x2="520" y2="200" stroke="#9b2c2c" stroke-width="2" marker-end="url(#arrow)"/>
+        <path d="M440 236 H250 V100" fill="none" stroke="#9b2c2c" stroke-width="2" marker-end="url(#arrow)"/>
+        <line x1="970" y1="108" x2="790" y2="210" stroke="#0e6b56" stroke-width="2" marker-end="url(#arrow)"/>
+        <line x1="970" y1="108" x2="1050" y2="210" stroke="#9b2c2c" stroke-width="2" marker-end="url(#arrow)"/>
+        <line x1="810" y1="282" x2="810" y2="370" stroke="#0aa3b0" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow-c)"/>
+        <text x="95" y="74" text-anchor="middle" fill="#fff" font-size="16" font-family="Segoe UI, Microsoft JhengHei, sans-serif" data-i18n="n1">進入</text>
+        <text x="305" y="74" text-anchor="middle" fill="#071a33" font-size="16" font-family="Segoe UI, Microsoft JhengHei, sans-serif" data-i18n="n2">填寫</text>
+        <text x="520" y="64" text-anchor="middle" fill="#071a33" font-size="16" font-family="Segoe UI, Microsoft JhengHei, sans-serif" data-i18n="n3">必填齊？</text>
+        <text x="520" y="86" text-anchor="middle" fill="#0aa3b0" font-size="13" font-family="Segoe UI, Microsoft JhengHei, sans-serif" data-i18n="n3b">是，往右</text>
+        <text x="745" y="74" text-anchor="middle" fill="#071a33" font-size="16" font-family="Segoe UI, Microsoft JhengHei, sans-serif" data-i18n="n4">送出</text>
+        <text x="970" y="64" text-anchor="middle" fill="#071a33" font-size="16" font-family="Segoe UI, Microsoft JhengHei, sans-serif" data-i18n="n5">受理？</text>
+        <text x="970" y="86" text-anchor="middle" fill="#0aa3b0" font-size="13" font-family="Segoe UI, Microsoft JhengHei, sans-serif" data-i18n="n5b">成功往左下</text>
+        <text x="520" y="230" text-anchor="middle" fill="#9b2c2c" font-size="15" font-family="Segoe UI, Microsoft JhengHei, sans-serif" data-i18n="n6">否，留在表單</text>
+        <text x="520" y="252" text-anchor="middle" fill="#5d6d80" font-size="13" font-family="Segoe UI, Microsoft JhengHei, sans-serif" data-i18n="n6b">指出缺項</text>
+        <text x="790" y="240" text-anchor="middle" fill="#0e6b56" font-size="15" font-family="Segoe UI, Microsoft JhengHei, sans-serif" data-i18n="n7">感謝，已收到</text>
+        <text x="790" y="262" text-anchor="middle" fill="#5d6d80" font-size="13" font-family="Segoe UI, Microsoft JhengHei, sans-serif" data-i18n="n7b">Thank you</text>
+        <text x="1050" y="240" text-anchor="middle" fill="#9b2c2c" font-size="15" font-family="Segoe UI, Microsoft JhengHei, sans-serif" data-i18n="n8">失敗，可再送</text>
+        <text x="1050" y="262" text-anchor="middle" fill="#5d6d80" font-size="13" font-family="Segoe UI, Microsoft JhengHei, sans-serif" data-i18n="n8b">Oops</text>
+        <text x="810" y="400" text-anchor="middle" fill="#0aa3b0" font-size="15" font-family="Segoe UI, Microsoft JhengHei, sans-serif" data-i18n="n9">依國家分派</text>
+        <text x="810" y="422" text-anchor="middle" fill="#5d6d80" font-size="13" font-family="Segoe UI, Microsoft JhengHei, sans-serif" data-i18n="n9b">規劃中的內部分派</text>
+      </svg>
+      <div class="legend">
+        <span><i class="swatch"></i><span data-i18n="legSolid">實線：訪客在聯絡頁上經歷的步驟</span></span>
+        <span><i class="swatch dash"></i><span data-i18n="legDash">虛線：送出成功之後建議的內部分派</span></span>
+      </div>
+    </section>
+
+    <section class="slide">
+      <p class="kicker">04</p>
+      <h2 data-i18n="s4">每一步在做什麼</h2>
+      <div class="cards">
+        <article class="card"><b data-i18n="p1t">1. 進入</b><p data-i18n="p1">從頁首 Enquire now、服務頁的預約按鈕，或直接打開 /contact。表單標題是 How can we help?</p></article>
+        <article class="card"><b data-i18n="p2t">2. 填寫</b><p data-i18n="p2">姓名、公司、信箱、電話、國家、服務、訊息、條款。服務可全空，其餘有必填的都不能空。</p></article>
+        <article class="card"><b data-i18n="p3t">3. 檢查</b><p data-i18n="p3">信箱要像電子郵件。國家不能停在 Select one...。條款必須勾。缺任何一項就留在原頁，不送出。</p></article>
+        <article class="card"><b data-i18n="p4t">4. 送出</b><p data-i18n="p4">按鈕文字是 Submit。送出當下改成 Please wait...，避免連按。</p></article>
+        <article class="card"><b data-i18n="p5t">5. 結果</b><p data-i18n="p5">成功顯示感謝句，失敗顯示 Oops，表單還在，可以再送一次。</p></article>
+        <article class="card"><b data-i18n="p6t">6. 分派</b><p data-i18n="p6">公開頁沒有寫收件信箱。建議用 Country 決定第一個窗口，再用服務勾選決定找哪一組人回。</p></article>
+      </div>
+    </section>
+
+    <section class="slide">
+      <p class="kicker">05</p>
+      <h2 data-i18n="s5">建議的分派</h2>
+      <table>
+        <thead>
+          <tr><th>Country</th><th data-i18n="desk">第一個窗口</th><th data-i18n="why">原因</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Taiwan</td><td>info.tpe@northgo.com</td><td data-i18n="r1">表單沒有城市。台北總部先收，再視需要轉台中或高雄。</td></tr>
+          <tr><td>Japan</td><td>info.tyo@northgo.com</td><td data-i18n="r2">日本窗口。大阪案件由東京再轉。</td></tr>
+          <tr><td>Vietnam</td><td>info.hcmc@northgo.com</td><td data-i18n="r3">對應胡志明市辦公室。</td></tr>
+          <tr><td>United States</td><td>info.lax@northgo.com</td><td data-i18n="r4">對應洛杉磯辦公室。</td></tr>
+          <tr><td data-i18n="other">其餘國家</td><td>info.tpe@northgo.com</td><td data-i18n="r5">總部統一收，再指定負責人。</td></tr>
+        </tbody>
+      </table>
+      <p class="muted" data-i18n="routeNote">服務勾選不改窗口，只告訴窗口要找貨運、專案、倉儲、船務或一般詢價。</p>
+    </section>
+
+    <section class="slide">
+      <p class="kicker">06</p>
+      <h2 data-i18n="s6">訪客會看到的句子</h2>
+      <div class="cards">
+        <article class="card"><b class="ok">Thank you! Your submission has been received!</b><p data-i18n="m1">送出成功。流程停在感謝，並進入內部分派。</p></article>
+        <article class="card"><b class="bad">Oops! Something went wrong while submitting the form.</b><p data-i18n="m2">送出失敗。保留已填內容，讓訪客再按一次 Submit。</p></article>
+        <article class="card"><b>Please wait...</b><p data-i18n="m3">送出中的按鈕文字。這段時間不再接受第二次送出。</p></article>
+        <article class="card"><b>Type your message...</b><p data-i18n="m4">Message 的空白提示。正式內容仍要由訪客自己寫，最多 5000 字。</p></article>
+      </div>
+    </section>
+
+    <section class="slide">
+      <p class="kicker">07</p>
+      <h2 data-i18n="s7">作業檢查</h2>
+      <div class="cards">
+        <article class="card"><b data-i18n="c1t">中英文</b><p data-i18n="c1">欄位名沿用官網英文。對客說明與內部分派用中文或英文都可以，但欄位本身不要改名，才對得上現在的表單。</p></article>
+        <article class="card"><b data-i18n="c2t">送出前</b><p data-i18n="c2">九個必填都有值，信箱格式正確，國家已選，條款已勾。服務可以是空的。</p></article>
+        <article class="card"><b data-i18n="c3t">送出後</b><p data-i18n="c3">先看成功或失敗句。成功才依國家寫信給對應窗口，並在信裡附上勾選的服務。</p></article>
+        <article class="card"><b data-i18n="c4t">回覆</b><p data-i18n="c4">窗口用訪客留下的 Email 回覆。電話只在信箱聯絡不到時使用。</p></article>
+      </div>
+    </section>
+  </main>
+  <footer class="bar">
+    <div class="nav">
+      <button type="button" id="prev" data-i18n="prev">上一張</button>
+      <button type="button" id="next" data-i18n="next">下一張</button>
+    </div>
+    <div class="count" id="count">1 / 8</div>
+    <p class="muted" data-i18n="keys">方向鍵也可以翻頁</p>
+  </footer>
+  <script>
+    var COPY = {
+      "zh-tw": {
+        doc: "詢價簡報",
+        kicker: "Enquiry form · 聯絡頁",
+        title: "詢價表單作業流程",
+        lede: "欄位以 www.northgo.com/contact 的「How can we help?」表單為準。這份簡報說明訪客怎麼填、網站怎麼檢查，以及送出成功後建議怎麼分派。",
+        source: "來源頁最後發佈：2025-09-12。成功句為 Thank you! Your submission has been received! 失敗句為 Oops! Something went wrong while submitting the form.",
+        s1: "表單上的欄位", colField: "欄位", colControl: "控制", colRule: "規則",
+        text: "單行文字", email: "電子郵件", tel: "電話", select: "下拉，含 Select one...",
+        servicesQ: "What services are you interested in?",
+        checks: "五個核取方塊，可複選", area: "多行，最多 5000 字。提示 Type your message...",
+        terms: "I accept the Terms", check: "核取方塊，Terms 連到條款",
+        required: "必填", optional: "未強制",
+        s2: "服務選項與國家", svcTitle: "可複選的服務",
+        svcBody: "Freight Logistics、Project Logistics、Warehouse Logistics、Shipping Agency、Other。官網沒有要求至少勾一項。都沒勾時，作業上視為一般詢價。",
+        countryTitle: "Country 必須改離 Select one...",
+        s3: "表單流程", svgTitle: "詢價表單流程",
+        n1: "進入", n2: "填寫", n3: "必填齊？", n3b: "是，往右", n4: "送出", n5: "受理？", n5b: "成功往左下",
+        n6: "否，留在表單", n6b: "指出缺項", n7: "感謝，已收到", n7b: "Thank you", n8: "失敗，可再送", n8b: "Oops",
+        n9: "依國家分派", n9b: "規劃中的內部分派",
+        legSolid: "實線：訪客在聯絡頁上經歷的步驟",
+        legDash: "虛線：送出成功之後建議的內部分派",
+        s4: "每一步在做什麼",
+        p1t: "1. 進入", p1: "從頁首 Enquire now、服務頁的預約按鈕，或直接打開 /contact。表單標題是 How can we help?",
+        p2t: "2. 填寫", p2: "姓名、公司、信箱、電話、國家、服務、訊息、條款。服務可全空，其餘有必填的都不能空。",
+        p3t: "3. 檢查", p3: "信箱要像電子郵件。國家不能停在 Select one...。條款必須勾。缺任何一項就留在原頁，不送出。",
+        p4t: "4. 送出", p4: "按鈕文字是 Submit。送出當下改成 Please wait...，避免連按。",
+        p5t: "5. 結果", p5: "成功顯示感謝句，失敗顯示 Oops，表單還在，可以再送一次。",
+        p6t: "6. 分派", p6: "公開頁沒有寫收件信箱。建議用 Country 決定第一個窗口，再用服務勾選決定找哪一組人回。",
+        s5: "建議的分派", desk: "第一個窗口", why: "原因",
+        r1: "表單沒有城市。台北總部先收，再視需要轉台中或高雄。",
+        r2: "日本窗口。大阪案件由東京再轉。",
+        r3: "對應胡志明市辦公室。",
+        r4: "對應洛杉磯辦公室。",
+        other: "其餘國家", r5: "總部統一收，再指定負責人。",
+        routeNote: "服務勾選不改窗口，只告訴窗口要找貨運、專案、倉儲、船務或一般詢價。",
+        s6: "訪客會看到的句子",
+        m1: "送出成功。流程停在感謝，並進入內部分派。",
+        m2: "送出失敗。保留已填內容，讓訪客再按一次 Submit。",
+        m3: "送出中的按鈕文字。這段時間不再接受第二次送出。",
+        m4: "Message 的空白提示。正式內容仍要由訪客自己寫，最多 5000 字。",
+        s7: "作業檢查",
+        c1t: "中英文", c1: "欄位名沿用官網英文。對客說明與內部分派用中文或英文都可以，但欄位本身不要改名，才對得上現在的表單。",
+        c2t: "送出前", c2: "八個必填都有值，信箱格式正確，國家已選，條款已勾。服務可以是空的。",
+        c3t: "送出後", c3: "先看成功或失敗句。成功才依國家寫信給對應窗口，並在信裡附上勾選的服務。",
+        c4t: "回覆", c4: "窗口用訪客留下的 Email 回覆。電話只在信箱聯絡不到時使用。",
+        prev: "上一張", next: "下一張", keys: "方向鍵也可以翻頁"
+      },
+      en: {
+        doc: "Enquiry briefing",
+        kicker: "Enquiry form · contact page",
+        title: "Enquiry form workflow",
+        lede: "Fields follow the How can we help? form on www.northgo.com/contact. This briefing covers what the visitor fills in, what the page checks, and how a successful enquiry should be routed.",
+        source: "Source page last published 2025-09-12. Success copy: Thank you! Your submission has been received! Failure copy: Oops! Something went wrong while submitting the form.",
+        s1: "Fields on the form", colField: "Field", colControl: "Control", colRule: "Rule",
+        text: "Single-line text", email: "Email", tel: "Telephone", select: "Dropdown, includes Select one...",
+        servicesQ: "What services are you interested in?",
+        checks: "Five checkboxes, any combination", area: "Text area, 5000 characters. Placeholder: Type your message...",
+        terms: "I accept the Terms", check: "Checkbox. Terms links to the terms page",
+        required: "Required", optional: "Not required",
+        s2: "Services and countries", svcTitle: "Services, multi-select",
+        svcBody: "Freight Logistics, Project Logistics, Warehouse Logistics, Shipping Agency, Other. The live form does not require one to be ticked. If none are ticked, treat it as a general enquiry.",
+        countryTitle: "Country must move off Select one...",
+        s3: "Form flow", svgTitle: "Enquiry form flow",
+        n1: "Enter", n2: "Fill in", n3: "Complete?", n3b: "Yes, go right", n4: "Submit", n5: "Accepted?", n5b: "Success, down left",
+        n6: "No, stay here", n6b: "Show what is missing", n7: "Thank you", n7b: "Received", n8: "Failed, retry", n8b: "Oops",
+        n9: "Route by country", n9b: "Proposed internal step",
+        legSolid: "Solid: what the visitor does on the contact page",
+        legDash: "Dashed: proposed routing after a successful submit",
+        s4: "What each step does",
+        p1t: "1. Enter", p1: "From Enquire now, a service booking button, or /contact directly. The form heading is How can we help?",
+        p2t: "2. Fill in", p2: "Name, company, email, phone, country, services, message, and terms. Services may be empty. Every required field needs a value.",
+        p3t: "3. Check", p3: "Email must look like an email. Country cannot stay on Select one.... Terms must be checked. Anything missing stays on the page and is not sent.",
+        p4t: "4. Submit", p4: "The button reads Submit. While sending it changes to Please wait... so it is not pressed twice.",
+        p5t: "5. Result", p5: "Success shows the thank-you line. Failure shows Oops. The form remains and can be sent again.",
+        p6t: "6. Route", p6: "The public page does not name an inbox. Use Country for the first desk, then the service ticks for which team replies.",
+        s5: "Proposed routing", desk: "First desk", why: "Why",
+        r1: "The form has no city. Taipei head office receives it, then forwards to Taichung or Kaohsiung when needed.",
+        r2: "Japan desk. Osaka work is passed on from Tokyo.",
+        r3: "Matches the Ho Chi Minh City office.",
+        r4: "Matches the Los Angeles office.",
+        other: "Every other country", r5: "Head office receives it and names an owner.",
+        routeNote: "Service ticks do not change the desk. They tell that desk to involve freight, projects, warehouse, shipping agency, or a general enquiry.",
+        s6: "Lines the visitor sees",
+        m1: "Submit succeeded. The visitor flow stops on the thank-you line, and internal routing starts.",
+        m2: "Submit failed. Keep what was typed and let the visitor press Submit again.",
+        m3: "Button label while the form is sending. A second submit waits.",
+        m4: "Placeholder on Message. The visitor still writes the real note, up to 5000 characters.",
+        s7: "Operating checks",
+        c1t: "Both languages", c1: "Keep the live English field names. Notes to the visitor and the internal route can be Chinese or English. Renaming fields would break the match to the current form.",
+        c2t: "Before submit", c2: "All eight required values are present, the email format is valid, a country is chosen, and terms are accepted. Services may be empty.",
+        c3t: "After submit", c3: "Read the thank-you or Oops line first. Only a success is emailed to the country desk, with the ticked services included.",
+        c4t: "Reply", c4: "The desk replies to the Email the visitor left. Phone is the backup when email does not connect.",
+        prev: "Previous", next: "Next", keys: "Arrow keys also move slides"
+      }
+    };
+    var lang = "zh-tw";
+    var index = 0;
+    var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+
+    function apply() {
+      document.documentElement.lang = lang === "zh-tw" ? "zh-Hant" : "en";
+      document.querySelectorAll("[data-i18n]").forEach(function (node) {
+        node.textContent = COPY[lang][node.getAttribute("data-i18n")] || "";
+      });
+      document.querySelectorAll("[data-set-lang]").forEach(function (button) {
+        button.setAttribute("aria-pressed", String(button.getAttribute("data-set-lang") === lang));
+      });
+      document.title = "Northgo · " + COPY[lang].title;
+    }
+
+    function show(next) {
+      index = Math.max(0, Math.min(slides.length - 1, next));
+      slides.forEach(function (slide, i) { slide.hidden = i !== index; });
+      document.getElementById("count").textContent = (index + 1) + " / " + slides.length;
+      document.getElementById("prev").disabled = index === 0;
+      document.getElementById("next").disabled = index === slides.length - 1;
+    }
+
+    document.addEventListener("click", function (event) {
+      var langButton = event.target.closest("[data-set-lang]");
+      if (langButton) {
+        lang = langButton.getAttribute("data-set-lang");
+        apply();
+      }
+    });
+    document.getElementById("prev").addEventListener("click", function () { show(index - 1); });
+    document.getElementById("next").addEventListener("click", function () { show(index + 1); });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "ArrowRight") show(index + 1);
+      if (event.key === "ArrowLeft") show(index - 1);
+    });
+    apply();
+    show(0);
+  </script>
+</body>
+</html>
