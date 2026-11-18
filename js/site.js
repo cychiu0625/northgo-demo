@@ -12,6 +12,8 @@
       homeH1: "讓物流變得輕鬆。",
       homeLede: "Northgo 在台北深耕超過三十年。貨運、專案、倉儲和船務代理由同一個窗口負責，少一些來回，進度看得到。",
       homeServices: "四項服務",
+      altHero: "海上的貨櫃船", altFreight: "港口貨櫃", altProject: "港邊的大型機組",
+      altWarehouse: "倉庫貨架", altAgency: "靠泊的貨船", altAbout: "河岸城市的午後",
       servicesTitle: "服務",
       servicesLede: "沒有另開的總覽迷宮。四項服務各有一頁，詢價都回到這一語系的聯絡頁。",
       svcFreight: "貨運物流", svcFreightLede: "海運、空運、陸運、報關。",
@@ -67,6 +69,8 @@
       homeH1: "Making logistics effortless.",
       homeLede: "Northgo has worked from Taipei for more than thirty years. Freight, projects, warehousing, and shipping agency sit with one desk, so handoffs drop and progress stays visible.",
       homeServices: "Four services",
+      altHero: "A container ship at sea", altFreight: "Containers at a port", altProject: "Heavy machinery beside the quay",
+      altWarehouse: "Warehouse racks", altAgency: "A cargo ship at berth", altAbout: "A riverside city in the afternoon",
       servicesTitle: "Services",
       servicesLede: "Four services, one page each. Every enquiry stays in the language you are reading.",
       svcFreight: "Freight logistics", svcFreightLede: "Ocean, air, land, and customs.",
@@ -122,6 +126,8 @@
       homeH1: "物流を、たやすく。",
       homeLede: "Northgo は台北を拠点に三十余年。貨物、プロジェクト、倉庫、船舶代理を一つの窓口にまとめ、引き継ぎを減らし、進捗を見えるようにします。",
       homeServices: "4つのサービス",
+      altHero: "海上のコンテナ船", altFreight: "港のコンテナ", altProject: "岸壁の大型機材",
+      altWarehouse: "倉庫の棚", altAgency: "着岸した貨物船", altAbout: "川沿いの街の午後",
       servicesTitle: "サービス",
       servicesLede: "4つのサービスがそれぞれ1ページ。問い合わせはこの言語のままです。",
       svcFreight: "貨物物流", svcFreightLede: "海運、空運、陸運、通関。",
@@ -177,6 +183,8 @@
       homeH1: "Biến logistics thành chuyện đơn giản.",
       homeLede: "Northgo làm việc từ Đài Bắc hơn ba mươi năm. Vận tải, dự án, kho và đại lý tàu nằm ở một quầy, bớt chuyển tay, tiến độ nhìn thấy được.",
       homeServices: "Bốn dịch vụ",
+      altHero: "Tàu container trên biển", altFreight: "Container tại cảng", altProject: "Máy móc nặng bên cầu tàu",
+      altWarehouse: "Kệ trong kho", altAgency: "Tàu hàng cập bến", altAbout: "Thành phố ven sông buổi chiều",
       servicesTitle: "Dịch vụ",
       servicesLede: "Bốn dịch vụ, mỗi dịch vụ một trang. Yêu cầu giữ nguyên ngôn ngữ bạn đang đọc.",
       svcFreight: "Vận tải", svcFreightLede: "Đường biển, hàng không, đường bộ và thông quan.",
@@ -250,6 +258,9 @@
     if (titleKey) document.title = t(titleKey);
     document.querySelectorAll("[data-i18n]").forEach(function (node) {
       node.textContent = t(node.getAttribute("data-i18n"));
+    });
+    document.querySelectorAll("[data-i18n-alt]").forEach(function (node) {
+      node.alt = t(node.getAttribute("data-i18n-alt"));
     });
     document.querySelectorAll("[data-set-lang]").forEach(function (button) {
       button.setAttribute("aria-pressed", String(button.getAttribute("data-set-lang") === lang));
