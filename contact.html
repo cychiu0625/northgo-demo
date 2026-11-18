@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Northgo</title>
+  <link rel="stylesheet" href="css/site.css?v=1.0.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body data-page="contact" data-title-key="contactTitle">
+  <a class="skip" href="#main" data-i18n="skip">跳至內容</a>
+  <header class="topbar">
+    <a class="brand" href="index.html"><strong>Northgo</strong></a>
+    <button class="menu" type="button" aria-expanded="false" data-i18n="menu">選單</button>
+    <nav class="nav" aria-label="Primary">
+      <a href="index.html" data-nav="home" data-i18n="navHome">首頁</a>
+      <a href="services.html" data-nav="services" data-i18n="navServices">服務</a>
+      <a href="about.html" data-nav="about" data-i18n="navAbout">關於</a>
+      <a href="contact.html" data-nav="contact" data-i18n="navContact">聯絡</a>
+      <a class="btn" href="#enquiry" data-i18n="enquire">詢價</a>
+    </nav>
+    <div class="langs" role="group" aria-label="Language">
+      <button type="button" data-set-lang="zh-tw">繁中</button>
+      <button type="button" data-set-lang="en">EN</button>
+      <button type="button" data-set-lang="ja">日本語</button>
+      <button type="button" data-set-lang="vi">VI</button>
+    </div>
+  </header>
+  <main id="main">
+    <section class="hero">
+      <div class="wrap">
+        <h1 data-i18n="contactTitle">聯絡</h1>
+        <p data-i18n="contactLede"></p>
+      </div>
+    </section>
+    <section class="section" id="locations">
+      <div class="wrap">
+        <div class="regions" role="group">
+          <button type="button" data-region="all" aria-pressed="true" data-i18n="all">全部 7</button>
+          <button type="button" data-region="taiwan" data-i18n="taiwan">台灣 3</button>
+          <button type="button" data-region="japan" data-i18n="japan">日本 2</button>
+          <button type="button" data-region="southeast-asia" data-i18n="sea">東南亞 1</button>
+          <button type="button" data-region="americas" data-i18n="americas">美洲 1</button>
+        </div>
+        <p class="lede" id="map-caption"></p>
+        <div class="stage">
+          <div class="map-frame"><div id="map"></div></div>
+          <div class="panel">
+            <h2 data-i18n="offices">辦公室</h2>
+            <p class="note" data-i18n="listHint"></p>
+            <div id="office-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section" id="enquiry">
+      <div class="wrap" style="max-width:640px">
+        <h2 data-i18n="formTitle">詢價</h2>
+        <form id="enquiry-form" novalidate>
+          <label><span data-i18n="name">姓名</span><input name="name" autocomplete="name" required></label>
+          <label><span data-i18n="email">信箱</span><input name="email" type="email" autocomplete="email" required></label>
+          <label><span data-i18n="service">服務</span>
+            <select name="service">
+              <option value="freight" data-i18n="optFreight"></option>
+              <option value="project" data-i18n="optProject"></option>
+              <option value="warehouse" data-i18n="optWarehouse"></option>
+              <option value="agency" data-i18n="optAgency"></option>
+            </select>
+          </label>
+          <label><span data-i18n="message">需求</span><textarea name="message" required></textarea></label>
+          <p class="err" id="form-error" hidden></p>
+          <button class="btn navy" type="submit" data-i18n="send">送出詢價</button>
+        </form>
+        <p class="ok" id="form-ok" hidden></p>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <span data-i18n="footerNote"></span>
+      <a href="https://www.northgo.com/" data-i18n="footerLive">開啟正式站</a>
+      <a href="sitemap.html">Sitemap</a>
+    </div>
+  </footer>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/site.js?v=1.0.0"></script>
+  <script src="js/contact.js?v=1.0.0"></script>
+</body>
+</html>

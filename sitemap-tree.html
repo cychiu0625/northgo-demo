@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Northgo sitemap tree</title>
+  <meta name="description" content="Concise tree sitemap of www.northgo.com in English, Traditional Chinese, Japanese, and Vietnamese.">
+  <meta name="theme-color" content="#071a33">
+  <style>
+    :root {
+      --navy: #071a33;
+      --navy-2: #0d2c52;
+      --ink: #122033;
+      --muted: #5d6d80;
+      --line: #d7e0ea;
+      --paper: #f4f7fb;
+      --white: #ffffff;
+      --cyan: #14c8d6;
+      --cyan-deep: #0aa3b0;
+      --bad: #9b2c2c;
+      --font: "Segoe UI", "PingFang TC", "Noto Sans TC", "Hiragino Sans", "Yu Gothic", "Microsoft JhengHei", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      color: var(--ink);
+      background:
+        radial-gradient(900px 320px at 100% -10%, rgba(20, 200, 214, 0.16), transparent 55%),
+        var(--paper);
+      line-height: 1.45;
+    }
+    a { color: inherit; }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px clamp(16px, 4vw, 40px);
+      background: rgba(255,255,255,0.92);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+    }
+    .brand { text-decoration: none; display: flex; gap: 10px; align-items: baseline; min-height: 44px; }
+    .brand strong { color: var(--cyan-deep); font-size: 1.2rem; }
+    .brand span { color: var(--muted); }
+    .top-links a { text-decoration: none; padding: 8px 10px; min-height: 44px; display: inline-flex; align-items: center; }
+    .wrap { width: min(1080px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 48px; }
+    h1 { margin: 8px 0 6px; font-size: clamp(1.8rem, 4vw, 2.6rem); letter-spacing: -0.04em; color: var(--navy); line-height: 1.1; }
+    .lede { margin: 0 0 18px; color: var(--muted); max-width: 62ch; }
+    .langs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+    button {
+      font: inherit;
+      min-height: 44px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: white;
+      padding: 0 14px;
+      cursor: pointer;
+    }
+    button[aria-pressed="true"] { background: var(--navy); color: white; border-color: var(--navy); }
+    button:focus-visible, a:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
+
+    .root {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--navy);
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 10px 16px;
+      min-height: 44px;
+    }
+    .stem {
+      width: 1px;
+      height: 18px;
+      background: #9eb0c3;
+      margin-left: 28px;
+    }
+    .cols {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .col {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px 14px 8px;
+      min-width: 0;
+    }
+    .col h2 { margin: 0; font-size: 1rem; }
+    .col h2 a { text-decoration: none; color: var(--navy); }
+    .col h2 a:hover { color: var(--cyan-deep); }
+    .col ul, .nested { list-style: none; margin: 10px 0 0; padding: 0 0 0 14px; border-left: 2px solid #d7eef1; }
+    .col li { margin: 0 0 8px; }
+    .col a, .miss {
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      text-decoration: none;
+      color: var(--ink);
+    }
+    .col a:hover { color: var(--cyan-deep); }
+    .path { display: block; color: var(--muted); font-size: 0.75rem; font-family: ui-monospace, Consolas, monospace; overflow-wrap: anywhere; }
+    .miss { color: var(--bad); }
+    .gap {
+      margin-top: 12px;
+      background: white;
+      border: 1px dashed #e4b4b4;
+      border-radius: 16px;
+      padding: 12px 14px;
+    }
+    .gap a { color: var(--bad); font-weight: 700; text-decoration: none; }
+    footer { color: var(--muted); font-size: 0.85rem; margin-top: 22px; }
+    footer a { color: var(--cyan-deep); }
+    @media (max-width: 800px) {
+      .cols { grid-template-columns: 1fr; }
+      .stem { margin-left: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" id="home" href="https://www.northgo.com/">
+      <strong>NorthGO</strong>
+      <span id="brand">Tree</span>
+    </a>
+    <nav class="top-links"><a id="full" href="sitemap.html">Full map</a></nav>
+  </header>
+  <main class="wrap">
+    <h1 id="h1">Sitemap tree</h1>
+    <p class="lede" id="lede">Pages only. Sections stay on the full map.</p>
+    <div class="langs" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">English</button>
+      <button type="button" data-lang="zh-tw" aria-pressed="false">繁體中文</button>
+      <button type="button" data-lang="ja" aria-pressed="false">日本語</button>
+      <button type="button" data-lang="vi" aria-pressed="false">Tiếng Việt</button>
+    </div>
+    <a class="root" id="root" href="https://www.northgo.com/">Northgo</a>
+    <div class="stem"></div>
+    <div class="cols" id="cols"></div>
+    <footer><span id="foot"></span> · <a id="full2" href="sitemap.html">Full map</a></footer>
+  </main>
+  <script>
+    const ORIGIN = "https://www.northgo.com";
+    const PREFIX = { en: "", "zh-tw": "/zh-tw", ja: "/ja", vi: "/vi" };
+    const UI = {
+      en: {
+        title: "Northgo sitemap tree", brand: "Tree", full: "Full map",
+        h1: "Sitemap tree", lede: "Pages only. On-page sections stay on the full map.",
+        foot: "Concise tree · www.northgo.com", closed: "404"
+      },
+      "zh-tw": {
+        title: "Northgo 樹狀網站地圖", brand: "樹狀", full: "完整地圖",
+        h1: "樹狀網站地圖", lede: "只列頁面。頁內區段在完整地圖。",
+        foot: "精簡樹狀 · www.northgo.com", closed: "404"
+      },
+      ja: {
+        title: "Northgo サイトマップ・ツリー", brand: "ツリー", full: "詳細マップ",
+        h1: "サイトマップ・ツリー", lede: "ページだけ。ページ内の項目は詳細マップへ。",
+        foot: "簡略ツリー · www.northgo.com", closed: "404"
+      },
+      vi: {
+        title: "Cây sơ đồ Northgo", brand: "Cây", full: "Sơ đồ đầy đủ",
+        h1: "Cây sơ đồ website", lede: "Chỉ liệt kê trang. Mục trong trang nằm ở sơ đồ đầy đủ.",
+        foot: "Cây rút gọn · www.northgo.com", closed: "404"
+      }
+    };
+    const L = {
+      services: { en: "Services", "zh-tw": "服務", ja: "サービス", vi: "Dịch vụ" },
+      freight: { en: "Freight", "zh-tw": "貨運", ja: "貨物", vi: "Vận tải" },
+      ocean: { en: "Ocean", "zh-tw": "海運", ja: "海運", vi: "Đường biển" },
+      air: { en: "Air", "zh-tw": "空運", ja: "空運", vi: "Hàng không" },
+      land: { en: "Land", "zh-tw": "陸運", ja: "陸運", vi: "Đường bộ" },
+      customs: { en: "Customs", "zh-tw": "報關", ja: "通関", vi: "Thông quan" },
+      project: { en: "Project", "zh-tw": "專案", ja: "プロジェクト", vi: "Dự án" },
+      warehouse: { en: "Warehouse", "zh-tw": "倉儲", ja: "倉庫", vi: "Kho bãi" },
+      agency: { en: "Shipping Agency", "zh-tw": "船務代理", ja: "船舶代理店", vi: "Đại lý tàu" },
+      about: { en: "About", "zh-tw": "關於", ja: "会社概要", vi: "Giới thiệu" },
+      why: { en: "Why Northgo", "zh-tw": "為什麼選擇", ja: "選ぶ理由", vi: "Vì sao chọn" },
+      story: { en: "Vision · Mission · Story", "zh-tw": "願景 · 使命 · 故事", ja: "ビジョン · 使命 · 沿革", vi: "Tầm nhìn · Sứ mệnh · Câu chuyện" },
+      contact: { en: "Contact", "zh-tw": "聯絡", ja: "お問い合わせ", vi: "Liên hệ" },
+      form: { en: "Enquiry", "zh-tw": "詢價", ja: "フォーム", vi: "Biểu mẫu" },
+      offices: { en: "7 offices", "zh-tw": "7 個辦公室", ja: "7オフィス", vi: "7 văn phòng" },
+      legal: { en: "Legal", "zh-tw": "法律", ja: "法務", vi: "Pháp lý" },
+      privacy: { en: "Privacy", "zh-tw": "隱私權", ja: "プライバシー", vi: "Quyền riêng tư" },
+      terms: { en: "Terms", "zh-tw": "條款", ja: "利用規約", vi: "Điều khoản" },
+      cookies: { en: "Cookies", "zh-tw": "Cookie", ja: "Cookie", vi: "Cookie" },
+      disclaimer: { en: "Disclaimer", "zh-tw": "聲明", ja: "免責", vi: "Tuyên bố" },
+      news: { en: "News", "zh-tw": "新聞", ja: "ニュース", vi: "Tin tức" }
+    };
+
+    const TREE = [
+      {
+        key: "services", path: "/services/freight-logistics",
+        children: [
+          { key: "freight", path: "/services/freight-logistics", children: [
+            { key: "ocean", path: "/services/freight-logistics", hash: "ocean-freight" },
+            { key: "air", path: "/services/freight-logistics", hash: "air-freight" },
+            { key: "land", path: "/services/freight-logistics", hash: "land-transport" },
+            { key: "customs", path: "/services/freight-logistics", hash: "customs-clearance" }
+          ]},
+          { key: "project", path: "/services/project-logistics" },
+          { key: "warehouse", path: "/services/warehouse-logistics" },
+          { key: "agency", path: "/services/shipping-agency" }
+        ]
+      },
+      {
+        key: "about", path: "/about",
+        children: [
+          { key: "why", path: "/", hash: "why-northgo" },
+          { key: "story", path: "/about" }
+        ]
+      },
+      {
+        key: "contact", path: "/contact",
+        children: [
+          { key: "form", path: "/contact", hash: "enquiry-form" },
+          { key: "offices", path: "/contact", hash: "locations" }
+        ]
+      },
+      {
+        key: "legal", path: "/legal/privacy-policy",
+        children: [
+          { key: "privacy", path: "/legal/privacy-policy" },
+          { key: "terms", path: "/legal/terms" },
+          { key: "cookies", path: "/legal/cookie-policy" },
+          { key: "disclaimer", path: "/legal/disclaimer" }
+        ]
+      }
+    ];
+
+    let lang = "en";
+
+    function href(path, hash) {
+      const prefix = PREFIX[lang];
+      const base = path === "/" ? (prefix || "/") : prefix + path;
+      return ORIGIN + base + (hash ? "#" + hash : "");
+    }
+    function name(key) { return L[key][lang]; }
+    function pathText(path, hash) {
+      const prefix = PREFIX[lang];
+      const base = path === "/" ? (prefix || "/") : prefix + path;
+      return base + (hash ? "#" + hash : "");
+    }
+    function item(node) {
+      const url = href(node.path, node.hash);
+      let html = '<li><a href="' + url + '">' + name(node.key) + '</a>';
+      html += '<span class="path">' + pathText(node.path, node.hash) + '</span>';
+      if (node.children) {
+        html += '<ul class="nested">';
+        node.children.forEach(function (child) { html += item(child); });
+        html += '</ul>';
+      }
+      html += '</li>';
+      return html;
+    }
+    function render() {
+      const ui = UI[lang];
+      document.documentElement.lang = lang === "zh-tw" ? "zh-Hant" : lang;
+      document.title = ui.title;
+      document.getElementById("brand").textContent = ui.brand;
+      document.getElementById("h1").textContent = ui.h1;
+      document.getElementById("lede").textContent = ui.lede;
+      document.getElementById("full").textContent = ui.full;
+      document.getElementById("full2").textContent = ui.full;
+      document.getElementById("full").href = "sitemap.html?lang=" + lang;
+      document.getElementById("full2").href = "sitemap.html?lang=" + lang;
+      document.getElementById("foot").textContent = ui.foot;
+      document.getElementById("home").href = href("/");
+      document.getElementById("root").href = href("/");
+      document.getElementById("cols").innerHTML = TREE.map(function (branch) {
+        const url = href(branch.path);
+        let html = '<section class="col"><h2><a href="' + url + '">' + name(branch.key) + '</a></h2>';
+        html += '<span class="path">' + pathText(branch.path) + '</span><ul>';
+        branch.children.forEach(function (child) { html += item(child); });
+        html += '</ul></section>';
+        return html;
+      }).join("") + '<section class="gap"><a href="' + href("/news") + '">' + name("news") + '</a> <span class="miss">' + ui.closed + '</span><span class="path">' + pathText("/news") + '</span></section>';
+    }
+
+    document.querySelectorAll("[data-lang]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        lang = button.getAttribute("data-lang");
+        document.querySelectorAll("[data-lang]").forEach(function (el) {
+          el.setAttribute("aria-pressed", String(el === button));
+        });
+        render();
+      });
+    });
+    const initial = new URLSearchParams(location.search).get("lang");
+    if (initial && UI[initial]) {
+      lang = initial;
+      document.querySelectorAll("[data-lang]").forEach(function (el) {
+        el.setAttribute("aria-pressed", String(el.getAttribute("data-lang") === lang));
+      });
+    }
+    render();
+  </script>
+</body>
+</html>
