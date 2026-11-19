@@ -9,11 +9,12 @@
       footerLive: "開啟正式站",
       homeTitle: "Northgo｜讓物流變得輕鬆",
       homeEyebrow: "Taipei · since 1988",
-      homeH1: "讓物流變得輕鬆。",
+      homeH1: "讓物流變得",
+      homeH1b: "輕鬆",
       homeLede: "Northgo 在台北深耕超過三十年。貨運、專案、倉儲和船務代理由同一個窗口負責，少一些來回，進度看得到。",
       homeServices: "四項服務",
-      altHero: "海上的貨櫃船", altFreight: "港口貨櫃", altProject: "港邊的大型機組",
-      altWarehouse: "倉庫貨架", altAgency: "靠泊的貨船", altAbout: "河岸城市的午後",
+      altHero: "藍調時分的貨櫃港", altFreight: "機場貨機坪", altProject: "港邊的大型貨載",
+      altWarehouse: "高架貨運倉", altAgency: "靠泊的貨櫃船", altAbout: "港口黃昏",
       servicesTitle: "服務",
       servicesLede: "沒有另開的總覽迷宮。四項服務各有一頁，詢價都回到這一語系的聯絡頁。",
       svcFreight: "貨運物流", svcFreightLede: "海運、空運、陸運、報關。",
@@ -66,11 +67,12 @@
       footerLive: "Open the live site",
       homeTitle: "Northgo | Making logistics effortless",
       homeEyebrow: "Taipei · since 1988",
-      homeH1: "Making logistics effortless.",
+      homeH1: "Making logistics ",
+      homeH1b: "effortless",
       homeLede: "Northgo has worked from Taipei for more than thirty years. Freight, projects, warehousing, and shipping agency sit with one desk, so handoffs drop and progress stays visible.",
       homeServices: "Four services",
-      altHero: "A container ship at sea", altFreight: "Containers at a port", altProject: "Heavy machinery beside the quay",
-      altWarehouse: "Warehouse racks", altAgency: "A cargo ship at berth", altAbout: "A riverside city in the afternoon",
+      altHero: "A container port at blue hour", altFreight: "An airport cargo apron", altProject: "Oversized cargo on the quay",
+      altWarehouse: "A high-bay cargo terminal", altAgency: "A container ship at berth", altAbout: "A port at sunset",
       servicesTitle: "Services",
       servicesLede: "Four services, one page each. Every enquiry stays in the language you are reading.",
       svcFreight: "Freight logistics", svcFreightLede: "Ocean, air, land, and customs.",
@@ -123,11 +125,12 @@
       footerLive: "本番サイトを開く",
       homeTitle: "Northgo｜物流を、たやすく",
       homeEyebrow: "Taipei · since 1988",
-      homeH1: "物流を、たやすく。",
+      homeH1: "物流を、",
+      homeH1b: "たやすく",
       homeLede: "Northgo は台北を拠点に三十余年。貨物、プロジェクト、倉庫、船舶代理を一つの窓口にまとめ、引き継ぎを減らし、進捗を見えるようにします。",
       homeServices: "4つのサービス",
-      altHero: "海上のコンテナ船", altFreight: "港のコンテナ", altProject: "岸壁の大型機材",
-      altWarehouse: "倉庫の棚", altAgency: "着岸した貨物船", altAbout: "川沿いの街の午後",
+      altHero: "ブルーアワーのコンテナ港", altFreight: "空港の貨物エプロン", altProject: "岸壁の大型貨物",
+      altWarehouse: "高層貨物ターミナル", altAgency: "着岸したコンテナ船", altAbout: "夕暮れの港",
       servicesTitle: "サービス",
       servicesLede: "4つのサービスがそれぞれ1ページ。問い合わせはこの言語のままです。",
       svcFreight: "貨物物流", svcFreightLede: "海運、空運、陸運、通関。",
@@ -180,11 +183,12 @@
       footerLive: "Mở website chính",
       homeTitle: "Northgo | Logistics đơn giản hơn",
       homeEyebrow: "Taipei · since 1988",
-      homeH1: "Biến logistics thành chuyện đơn giản.",
+      homeH1: "Biến logistics thành ",
+      homeH1b: "chuyện đơn giản",
       homeLede: "Northgo làm việc từ Đài Bắc hơn ba mươi năm. Vận tải, dự án, kho và đại lý tàu nằm ở một quầy, bớt chuyển tay, tiến độ nhìn thấy được.",
       homeServices: "Bốn dịch vụ",
-      altHero: "Tàu container trên biển", altFreight: "Container tại cảng", altProject: "Máy móc nặng bên cầu tàu",
-      altWarehouse: "Kệ trong kho", altAgency: "Tàu hàng cập bến", altAbout: "Thành phố ven sông buổi chiều",
+      altHero: "Cảng container lúc chạng vạng", altFreight: "Sân đỗ hàng không", altProject: "Hàng siêu trường trên cầu tàu",
+      altWarehouse: "Kho hàng tầng cao", altAgency: "Tàu container cập bến", altAbout: "Cảng lúc hoàng hôn",
       servicesTitle: "Dịch vụ",
       servicesLede: "Bốn dịch vụ, mỗi dịch vụ một trang. Yêu cầu giữ nguyên ngôn ngữ bạn đang đọc.",
       svcFreight: "Vận tải", svcFreightLede: "Đường biển, hàng không, đường bộ và thông quan.",
@@ -296,6 +300,42 @@
     }
   });
 
+  function mountLogo() {
+    var nodes = document.querySelectorAll("[data-logo]");
+    if (!nodes.length) return;
+    function start() {
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      nodes.forEach(function (node) {
+        var anim = window.lottie.loadAnimation({
+          container: node,
+          renderer: "svg",
+          loop: false,
+          autoplay: !reduce,
+          path: "img/ng-logo.json?v=1.3.0"
+        });
+        if (reduce) {
+          anim.addEventListener("DOMLoaded", function () {
+            anim.goToAndStop(47, true);
+          });
+        }
+        var link = node.closest(".brand");
+        if (link) {
+          link.addEventListener("mouseenter", function () { anim.goToAndPlay(0, true); });
+        }
+      });
+    }
+    if (window.lottie) start();
+    else {
+      var script = document.createElement("script");
+      script.src = "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js";
+      script.onload = start;
+      document.head.appendChild(script);
+    }
+  }
+
   window.Northgo = { t: t, offices: OFFICES, get lang() { return lang; } };
-  document.addEventListener("DOMContentLoaded", apply);
+  document.addEventListener("DOMContentLoaded", function () {
+    apply();
+    mountLogo();
+  });
 })();
