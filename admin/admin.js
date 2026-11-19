@@ -18,10 +18,21 @@
     optAgency: "Option · Agency"
   };
   var SERVICE_LABELS = {
-    freight: "Freight",
-    project: "Project",
-    warehouse: "Warehouse",
-    agency: "Agency"
+    freight: "貨運",
+    project: "專案",
+    warehouse: "倉儲",
+    agency: "船務代理"
+  };
+  var STATUS_LABELS = {
+    new: "新件",
+    read: "已讀",
+    done: "已完成"
+  };
+  var LANG_LABELS = {
+    "zh-tw": "繁中",
+    en: "EN",
+    ja: "日本語",
+    vi: "VI"
   };
 
   function api(path, options) {
@@ -79,44 +90,55 @@
       api("/api/admin/login", { method: "POST", body: { password: password } }).then(function (res) {
         if (!res.ok) {
           err.hidden = false;
-          err.textContent = "Password incorrect.";
+          err.textContent = "密碼錯誤。";
           return;
         }
         location.href = "index.html";
       }).catch(function () {
         err.hidden = false;
-        err.textContent = "Could not reach the server.";
+        err.textContent = "無法連線伺服器。";
       });
     });
   }
 
   function statusBadge(status) {
-    return '<span class="badge ' + status + '">' + status + "</span>";
+    return '<span class="badge ' + status + '">' + escapeHtml(STATUS_LABELS[status] || status) + "</span>";
   }
 
   function bootInbox() {
-    var listRoot = document.getElementById("enquiry-list");
+    var listRoot = document.getElementById("enquiry-cards");
     var detailRoot = document.getElementById("enquiry-detail");
     var filter = document.getElementById("status-filter");
+    var search = document.getElementById("search-q");
     var empty = document.getElementById("enquiry-empty");
     var selected = "";
+    var mode = "view";
     var items = [];
+    var searchTimer = null;
 
     function load() {
-      var q = filter.value ? ("?status=" + encodeURIComponent(filter.value)) : "";
+      var params = [];
+      if (filter.value) params.push("status=" + encodeURIComponent(filter.value));
+      if (search.value.trim()) params.push("q=" + encodeURIComponent(search.value.trim()));
+      var q = params.length ? ("?" + params.join("&")) : "";
       return api("/api/admin/enquiries" + q).then(function (res) {
         if (!res.ok) {
-          listRoot.innerHTML = "<tr><td colspan='5'>Failed to load.</td></tr>";
+          listRoot.innerHTML = "<p class=\"err\">無法載入詢問列表。</p>";
           return;
         }
         items = res.data.items || [];
         renderList();
+        if (mode === "create") {
+          renderEditor(null);
+          return;
+        }
         if (selected) {
           var still = items.some(function (item) { return item.id === selected; });
-          if (still) showDetail(selected);
+          if (still) showDetail(selected, false);
           else {
             selected = "";
-            detailRoot.hidden = true;
+            mode = "view";
+            detailRoot.innerHTML = "<p class=\"empty\">點左側一筆詢問查看完整內容，或按「新增詢問」。</p>";
           }
         }
       });
@@ -130,88 +152,153 @@
       }
       listRoot.innerHTML = items.map(function (item) {
         return [
-          "<tr data-id=\"" + item.id + "\" data-active=\"" + (item.id === selected) + "\">",
-          "<td><button type=\"button\" class=\"linkish\" data-open=\"" + item.id + "\">" + escapeHtml(item.name) + "</button></td>",
-          "<td>" + escapeHtml(item.email) + "</td>",
-          "<td>" + escapeHtml(SERVICE_LABELS[item.service] || item.service) + "</td>",
-          "<td>" + statusBadge(item.status) + "</td>",
-          "<td>" + escapeHtml(formatWhen(item.created_at)) + "</td>",
-          "</tr>"
+          "<button type=\"button\" class=\"enquiry-card\" data-open=\"" + item.id + "\" aria-pressed=\"" + (item.id === selected && mode !== "create") + "\">",
+          "<div class=\"row\"><b>" + escapeHtml(item.name) + "</b>" + statusBadge(item.status) + "</div>",
+          "<div class=\"snippet\">" + escapeHtml(item.message) + "</div>",
+          "<div class=\"meta\">" + escapeHtml(SERVICE_LABELS[item.service] || item.service) + " · " + escapeHtml(item.email) + " · " + escapeHtml(formatWhen(item.created_at)) + "</div>",
+          "</button>"
         ].join("");
       }).join("");
       listRoot.querySelectorAll("[data-open]").forEach(function (btn) {
         btn.addEventListener("click", function () {
-          showDetail(btn.getAttribute("data-open"));
+          showDetail(btn.getAttribute("data-open"), true);
         });
       });
     }
 
-    function showDetail(id) {
-      selected = id;
+    function fieldOptions(selectedValue, map) {
+      return Object.keys(map).map(function (key) {
+        return "<option value=\"" + key + "\"" + (key === selectedValue ? " selected" : "") + ">" + escapeHtml(map[key]) + "</option>";
+      }).join("");
+    }
+
+    function renderEditor(item) {
+      var isNew = !item;
+      mode = isNew ? "create" : "edit";
+      if (isNew) selected = "";
       renderList();
-      var item = items.filter(function (row) { return row.id === id; })[0];
-      if (!item) return;
-      detailRoot.hidden = false;
       detailRoot.innerHTML = [
-        "<div class=\"card detail\">",
-        "<div class=\"actions\">",
-        statusBadge(item.status),
-        "<span class=\"meta\">" + escapeHtml(item.lang) + " · " + escapeHtml(formatWhen(item.created_at)) + "</span>",
+        "<h2 style=\"margin:0 0 12px;color:var(--navy);font-size:1.2rem\">" + (isNew ? "新增詢問" : "詢問詳情") + "</h2>",
+        isNew ? "" : "<p class=\"meta\" style=\"margin:0 0 12px\">送出時間：" + escapeHtml(formatWhen(item.created_at)) + "</p>",
+        "<form id=\"enquiry-editor\">",
+        "<div class=\"split-2\">",
+        "<label>姓名<input name=\"name\" required value=\"" + escapeAttr(item && item.name || "") + "\"></label>",
+        "<label>信箱<input name=\"email\" type=\"email\" required value=\"" + escapeAttr(item && item.email || "") + "\"></label>",
         "</div>",
-        "<div><b>" + escapeHtml(item.name) + "</b><div class=\"meta\">" + escapeHtml(item.email) + " · " + escapeHtml(SERVICE_LABELS[item.service] || item.service) + "</div></div>",
-        "<div class=\"message\">" + escapeHtml(item.message) + "</div>",
-        "<label>Status<select id=\"detail-status\">",
-        ["new", "read", "done"].map(function (s) {
-          return "<option value=\"" + s + "\"" + (s === item.status ? " selected" : "") + ">" + s + "</option>";
-        }).join(""),
-        "</select></label>",
-        "<label>Note<textarea id=\"detail-note\">" + escapeHtml(item.note || "") + "</textarea></label>",
+        "<div class=\"split-2\">",
+        "<label>服務<select name=\"service\">" + fieldOptions(item && item.service || "freight", SERVICE_LABELS) + "</select></label>",
+        "<label>語系<select name=\"lang\">" + fieldOptions(item && item.lang || "zh-tw", LANG_LABELS) + "</select></label>",
+        "</div>",
+        "<label>需求內容<textarea name=\"message\" required rows=\"6\">" + escapeHtml(item && item.message || "") + "</textarea></label>",
+        "<div class=\"split-2\">",
+        "<label>狀態<select name=\"status\">" + fieldOptions(item && item.status || "new", STATUS_LABELS) + "</select></label>",
+        "<label>內部備註<textarea name=\"note\" rows=\"3\">" + escapeHtml(item && item.note || "") + "</textarea></label>",
+        "</div>",
         "<div class=\"actions\">",
-        "<button type=\"button\" class=\"btn primary\" id=\"detail-save\">Save</button>",
-        "<button type=\"button\" class=\"btn danger\" id=\"detail-delete\">Delete</button>",
+        "<button type=\"submit\" class=\"btn primary\">" + (isNew ? "建立" : "儲存") + "</button>",
+        isNew ? "" : "<button type=\"button\" class=\"btn danger\" id=\"detail-delete\">刪除</button>",
+        "<button type=\"button\" class=\"btn ghost\" id=\"detail-cancel\">取消</button>",
         "</div>",
         "<p class=\"ok\" id=\"detail-ok\" hidden></p>",
         "<p class=\"err\" id=\"detail-err\" hidden></p>",
-        "</div>"
+        "</form>"
       ].join("");
 
-      document.getElementById("detail-save").addEventListener("click", function () {
-        var status = document.getElementById("detail-status").value;
-        var note = document.getElementById("detail-note").value;
-        api("/api/admin/enquiries/" + encodeURIComponent(id), {
-          method: "PATCH",
-          body: { status: status, note: note }
-        }).then(function (res) {
+      var form = document.getElementById("enquiry-editor");
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        var payload = {
+          name: form.name.value.trim(),
+          email: form.email.value.trim(),
+          service: form.service.value,
+          lang: form.lang.value,
+          message: form.message.value.trim(),
+          status: form.status.value,
+          note: form.note.value
+        };
+        var req = isNew
+          ? api("/api/admin/enquiries", { method: "POST", body: payload })
+          : api("/api/admin/enquiries/" + encodeURIComponent(item.id), { method: "PATCH", body: payload });
+        req.then(function (res) {
           var ok = document.getElementById("detail-ok");
           var err = document.getElementById("detail-err");
           if (!res.ok) {
             ok.hidden = true;
             err.hidden = false;
-            err.textContent = "Could not save.";
+            err.textContent = "儲存失敗，請檢查必填欄位。";
             return;
           }
           err.hidden = true;
           ok.hidden = false;
-          ok.textContent = "Saved.";
-          return load().then(function () { showDetail(id); });
+          ok.textContent = isNew ? "已建立。" : "已儲存。";
+          selected = res.data.item.id;
+          mode = "edit";
+          return load().then(function () { showDetail(selected, false); });
         });
       });
 
-      document.getElementById("detail-delete").addEventListener("click", function () {
-        if (!confirm("Delete this enquiry?")) return;
-        api("/api/admin/enquiries/" + encodeURIComponent(id), { method: "DELETE" }).then(function (res) {
-          if (!res.ok) return;
-          selected = "";
-          detailRoot.hidden = true;
-          load();
+      var cancel = document.getElementById("detail-cancel");
+      if (cancel) {
+        cancel.addEventListener("click", function () {
+          if (isNew) {
+            mode = "view";
+            detailRoot.innerHTML = "<p class=\"empty\">點左側一筆詢問查看完整內容，或按「新增詢問」。</p>";
+            renderList();
+            return;
+          }
+          showDetail(item.id, false);
         });
-      });
+      }
+
+      var del = document.getElementById("detail-delete");
+      if (del) {
+        del.addEventListener("click", function () {
+          if (!confirm("確定刪除這筆客戶詢問？")) return;
+          api("/api/admin/enquiries/" + encodeURIComponent(item.id), { method: "DELETE" }).then(function (res) {
+            if (!res.ok) return;
+            selected = "";
+            mode = "view";
+            detailRoot.innerHTML = "<p class=\"empty\">點左側一筆詢問查看完整內容，或按「新增詢問」。</p>";
+            load();
+          });
+        });
+      }
+    }
+
+    function showDetail(id, markRead) {
+      selected = id;
+      mode = "edit";
+      var item = items.filter(function (row) { return row.id === id; })[0];
+      if (!item) return;
+      renderEditor(item);
+      if (markRead && item.status === "new") {
+        api("/api/admin/enquiries/" + encodeURIComponent(id), {
+          method: "PATCH",
+          body: { status: "read" }
+        }).then(function (res) {
+          if (!res.ok || !res.data.item) return;
+          item.status = "read";
+          var idx = -1;
+          items.forEach(function (row, i) { if (row.id === id) idx = i; });
+          if (idx >= 0) items[idx] = res.data.item;
+          renderEditor(res.data.item);
+        });
+      }
     }
 
     filter.addEventListener("change", function () {
       selected = "";
-      detailRoot.hidden = true;
+      mode = "view";
+      detailRoot.innerHTML = "<p class=\"empty\">點左側一筆詢問查看完整內容，或按「新增詢問」。</p>";
       load();
+    });
+    search.addEventListener("input", function () {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(function () { load(); }, 220);
+    });
+    document.getElementById("refresh-list").addEventListener("click", function () { load(); });
+    document.getElementById("new-enquiry").addEventListener("click", function () {
+      renderEditor(null);
     });
     load();
   }
@@ -249,13 +336,13 @@
           "</label>",
           "</div>"
         ].join("");
-      }).join("") + "<div class=\"actions\"><button class=\"btn primary\" type=\"submit\">Save copy</button></div>";
+      }).join("") + "<div class=\"actions\"><button class=\"btn primary\" type=\"submit\">儲存文案</button></div>";
     }
 
     api("/api/admin/enquiry-copy").then(function (res) {
       if (!res.ok) {
         err.hidden = false;
-        err.textContent = "Could not load copy.";
+        err.textContent = "無法載入文案。";
         return;
       }
       store = Object.assign(store, res.data.copy || {});
@@ -278,13 +365,13 @@
         if (!res.ok) {
           ok.hidden = true;
           err.hidden = false;
-          err.textContent = "Could not save copy.";
+          err.textContent = "儲存失敗。";
           return;
         }
         store = Object.assign(store, res.data.copy || {});
         err.hidden = true;
         ok.hidden = false;
-        ok.textContent = "Copy saved.";
+        ok.textContent = "文案已儲存。";
       });
     });
   }

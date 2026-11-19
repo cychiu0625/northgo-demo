@@ -1,18 +1,13 @@
 import { json, readJson } from "../../../_lib/json.js";
 import { requireAdmin } from "../../../_lib/auth.js";
+import { getEnquiry, validateEnquiryInput } from "../../../_lib/enquiries.js";
 
 export async function onRequestGet(context) {
   const { request, env, params } = context;
   if (!(await requireAdmin(request, env))) return json({ error: "unauthorized" }, 401);
   if (!env.DB) return json({ error: "database unavailable" }, 503);
 
-  const row = await env.DB.prepare(
-    `SELECT id, created_at, name, email, service, message, lang, status, note
-     FROM enquiries WHERE id = ?`
-  )
-    .bind(params.id)
-    .first();
-
+  const row = await getEnquiry(env.DB, params.id);
   if (!row) return json({ error: "not found" }, 404);
   return json({ item: row });
 }
@@ -25,35 +20,36 @@ export async function onRequestPatch(context) {
   const body = await readJson(request);
   if (!body) return json({ error: "invalid json" }, 400);
 
-  const existing = await env.DB.prepare("SELECT id, status, note FROM enquiries WHERE id = ?")
-    .bind(params.id)
-    .first();
+  const existing = await getEnquiry(env.DB, params.id);
   if (!existing) return json({ error: "not found" }, 404);
 
-  let status = existing.status;
-  let note = existing.note;
-  if (typeof body.status === "string") {
-    if (["new", "read", "done"].indexOf(body.status) < 0) {
-      return json({ error: "invalid status" }, 400);
-    }
-    status = body.status;
-  }
-  if (typeof body.note === "string") {
-    note = body.note.slice(0, 2000);
-  }
+  const parsed = validateEnquiryInput(body, true);
+  if (!parsed.ok) return json({ error: "validation", fields: parsed.errors }, 400);
 
-  await env.DB.prepare("UPDATE enquiries SET status = ?, note = ? WHERE id = ?")
-    .bind(status, note, params.id)
+  const next = Object.assign({}, existing, parsed.value);
+
+  await env.DB.prepare(
+    `UPDATE enquiries
+     SET name = ?, email = ?, service = ?, message = ?, lang = ?, status = ?, note = ?
+     WHERE id = ?`
+  )
+    .bind(
+      next.name,
+      next.email,
+      next.service,
+      next.message,
+      next.lang,
+      next.status,
+      next.note || "",
+      params.id
+    )
     .run();
 
-  const item = await env.DB.prepare(
-    `SELECT id, created_at, name, email, service, message, lang, status, note
-     FROM enquiries WHERE id = ?`
-  )
-    .bind(params.id)
-    .first();
+  return json({ item: await getEnquiry(env.DB, params.id) });
+}
 
-  return json({ item });
+export async function onRequestPut(context) {
+  return onRequestPatch(context);
 }
 
 export async function onRequestDelete(context) {

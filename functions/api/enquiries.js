@@ -1,9 +1,5 @@
 import { json, readJson } from "../_lib/json.js";
-import { SERVICES, LANGS } from "../_lib/copy.js";
-
-function id() {
-  return crypto.randomUUID();
-}
+import { getEnquiry, newId, validateEnquiryInput } from "../_lib/enquiries.js";
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -12,31 +8,20 @@ export async function onRequestPost(context) {
   const body = await readJson(request);
   if (!body) return json({ error: "invalid json" }, 400);
 
-  const name = String(body.name || "").trim();
-  const email = String(body.email || "").trim();
-  const message = String(body.message || "").trim();
-  const service = String(body.service || "").trim();
-  let lang = String(body.lang || "zh-tw").trim();
-  if (LANGS.indexOf(lang) < 0) lang = "zh-tw";
-
-  if (!name || !email || !message || email.indexOf("@") < 1) {
-    return json({ error: "validation" }, 400);
-  }
-  if (SERVICES.indexOf(service) < 0) {
-    return json({ error: "invalid service" }, 400);
-  }
-  if (name.length > 120 || email.length > 200 || message.length > 4000) {
-    return json({ error: "too long" }, 400);
-  }
+  const parsed = validateEnquiryInput(
+    Object.assign({}, body, { status: "new", note: "" }),
+    false
+  );
+  if (!parsed.ok) return json({ error: "validation", fields: parsed.errors }, 400);
 
   const row = {
-    id: id(),
+    id: newId(),
     created_at: new Date().toISOString(),
-    name,
-    email,
-    service,
-    message,
-    lang,
+    name: parsed.value.name,
+    email: parsed.value.email,
+    service: parsed.value.service,
+    message: parsed.value.message,
+    lang: parsed.value.lang || "zh-tw",
     status: "new",
     note: ""
   };
@@ -58,5 +43,5 @@ export async function onRequestPost(context) {
     )
     .run();
 
-  return json({ ok: true, id: row.id }, 201);
+  return json({ ok: true, id: row.id, item: await getEnquiry(env.DB, row.id) }, 201);
 }

@@ -1,53 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>Northgo Admin · Enquiries</title>
-  <link rel="stylesheet" href="admin.css?v=1.4.0">
+  <title>Northgo Admin · 客戶詢問</title>
+  <link rel="stylesheet" href="admin.css?v=1.4.1">
 </head>
 <body data-admin="inbox">
   <div class="shell">
     <header class="top">
       <a class="brand" href="index.html">Northgo <span>Admin</span></a>
       <nav class="nav" aria-label="Admin">
-        <a href="index.html" data-nav="inbox">Enquiries</a>
-        <a href="copy.html" data-nav="copy">Form copy</a>
-        <button type="button" class="btn ghost" data-logout>Sign out</button>
+        <a href="index.html" data-nav="inbox">客戶詢問</a>
+        <a href="copy.html" data-nav="copy">表單文案</a>
+        <button type="button" class="btn ghost" data-logout>登出</button>
       </nav>
     </header>
-    <main>
-      <h1>Enquiry inbox</h1>
-      <p class="lede">Review submissions from the public contact form.</p>
+    <main class="inbox-main">
+      <div class="inbox-head">
+        <div>
+          <h1>客戶詢問</h1>
+          <p class="lede">前台聯絡表單送出的內容會出現在這裡，可新增、查看、修改與刪除。</p>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn" id="refresh-list">重新整理</button>
+          <button type="button" class="btn primary" id="new-enquiry">新增詢問</button>
+        </div>
+      </div>
+
       <div class="toolbar">
-        <label>Status
+        <label>狀態
           <select id="status-filter">
-            <option value="">All</option>
-            <option value="new">new</option>
-            <option value="read">read</option>
-            <option value="done">done</option>
+            <option value="">全部</option>
+            <option value="new">新件</option>
+            <option value="read">已讀</option>
+            <option value="done">已完成</option>
           </select>
         </label>
+        <label class="grow">搜尋
+          <input id="search-q" type="search" placeholder="姓名、信箱、需求內容…">
+        </label>
       </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Service</th>
-              <th>Status</th>
-              <th>When</th>
-            </tr>
-          </thead>
-          <tbody id="enquiry-list"></tbody>
-        </table>
-        <p class="empty" id="enquiry-empty" hidden>No enquiries yet.</p>
+
+      <div class="inbox-layout">
+        <section class="card list-pane" aria-label="詢問列表">
+          <div id="enquiry-cards" class="enquiry-cards"></div>
+          <p class="empty" id="enquiry-empty" hidden>尚無詢問。</p>
+        </section>
+        <section class="card detail-pane" id="enquiry-detail" aria-live="polite">
+          <p class="empty">點左側一筆詢問查看完整內容，或按「新增詢問」。</p>
+        </section>
       </div>
-      <div id="enquiry-detail" hidden></div>
     </main>
   </div>
-  <script src="admin.js?v=1.4.0"></script>
+  <script src="admin.js?v=1.4.1"></script>
 </body>
 </html>
