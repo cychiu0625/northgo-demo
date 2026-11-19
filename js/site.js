@@ -13,7 +13,7 @@
       homeH1b: "輕鬆",
       homeLede: "Northgo 在台北深耕超過三十年。貨運、專案、倉儲和船務代理由同一個窗口負責，少一些來回，進度看得到。",
       homeServices: "四項服務",
-      altHero: "藍調時分的貨櫃港", altFreight: "機場貨機坪", altProject: "港邊的大型貨載",
+      altHero: "藍調時分的貨櫃港", altFreight: "機場貨機坪", altFreightHero: "藍調時分靠泊的貨櫃船", altProject: "港邊的大型貨載",
       altWarehouse: "高架貨運倉", altAgency: "靠泊的貨櫃船", altAbout: "港口黃昏",
       servicesTitle: "服務",
       servicesLede: "沒有另開的總覽迷宮。四項服務各有一頁，詢價都回到這一語系的聯絡頁。",
@@ -22,6 +22,8 @@
       svcWarehouse: "倉儲物流", svcWarehouseLede: "據點、倉位、庫存，以及離岸倉儲。",
       svcAgency: "船務代理", svcAgencyLede: "港口代理與海事服務。",
       freightTitle: "貨運物流",
+      freightEyebrow: "海運 · 空運 · 陸運 · 報關",
+      freightJumps: "本頁貨運項目",
       freightLede: "一種貨運關係，四種走法。下面每一段都在這一頁。",
       ocean: "海運", oceanLede: "整櫃 FCL 與併櫃 LCL，沿既有航線安排。",
       air: "空運", airLede: "時程緊、要盯航班的貨。",
@@ -71,7 +73,7 @@
       homeH1b: "effortless",
       homeLede: "Northgo has worked from Taipei for more than thirty years. Freight, projects, warehousing, and shipping agency sit with one desk, so handoffs drop and progress stays visible.",
       homeServices: "Four services",
-      altHero: "A container port at blue hour", altFreight: "An airport cargo apron", altProject: "Oversized cargo on the quay",
+      altHero: "A container port at blue hour", altFreight: "An airport cargo apron", altFreightHero: "A container ship alongside at blue hour", altProject: "Oversized cargo on the quay",
       altWarehouse: "A high-bay cargo terminal", altAgency: "A container ship at berth", altAbout: "A port at sunset",
       servicesTitle: "Services",
       servicesLede: "Four services, one page each. Every enquiry stays in the language you are reading.",
@@ -80,6 +82,8 @@
       svcWarehouse: "Warehouse logistics", svcWarehouseLede: "Locations, storage, inventory, and offshore warehousing.",
       svcAgency: "Shipping agency", svcAgencyLede: "Port agency and marine services.",
       freightTitle: "Freight logistics",
+      freightEyebrow: "Ocean · Air · Land · Customs",
+      freightJumps: "Freight on this page",
       freightLede: "One freight relationship, four ways to move. Each block is on this page.",
       ocean: "Ocean", oceanLede: "FCL and LCL on established routes.",
       air: "Air", airLede: "Cargo that has to meet a flight.",
@@ -129,7 +133,7 @@
       homeH1b: "たやすく",
       homeLede: "Northgo は台北を拠点に三十余年。貨物、プロジェクト、倉庫、船舶代理を一つの窓口にまとめ、引き継ぎを減らし、進捗を見えるようにします。",
       homeServices: "4つのサービス",
-      altHero: "ブルーアワーのコンテナ港", altFreight: "空港の貨物エプロン", altProject: "岸壁の大型貨物",
+      altHero: "ブルーアワーのコンテナ港", altFreight: "空港の貨物エプロン", altFreightHero: "ブルーアワーに着岸したコンテナ船", altProject: "岸壁の大型貨物",
       altWarehouse: "高層貨物ターミナル", altAgency: "着岸したコンテナ船", altAbout: "夕暮れの港",
       servicesTitle: "サービス",
       servicesLede: "4つのサービスがそれぞれ1ページ。問い合わせはこの言語のままです。",
@@ -138,6 +142,8 @@
       svcWarehouse: "倉庫物流", svcWarehouseLede: "拠点、保管、在庫、オフショア倉庫。",
       svcAgency: "船舶代理店", svcAgencyLede: "港湾代理と海事サービス。",
       freightTitle: "貨物物流",
+      freightEyebrow: "海運 · 空運 · 陸運 · 通関",
+      freightJumps: "このページの貨物項目",
       freightLede: "一つの貨物窓口、四つの運び方。各項目はこのページにあります。",
       ocean: "海運", oceanLede: "FCL と LCL を既存航路で手配。",
       air: "空運", airLede: "フライトに合わせる貨物。",
@@ -187,7 +193,7 @@
       homeH1b: "chuyện đơn giản",
       homeLede: "Northgo làm việc từ Đài Bắc hơn ba mươi năm. Vận tải, dự án, kho và đại lý tàu nằm ở một quầy, bớt chuyển tay, tiến độ nhìn thấy được.",
       homeServices: "Bốn dịch vụ",
-      altHero: "Cảng container lúc chạng vạng", altFreight: "Sân đỗ hàng không", altProject: "Hàng siêu trường trên cầu tàu",
+      altHero: "Cảng container lúc chạng vạng", altFreight: "Sân đỗ hàng không", altFreightHero: "Tàu container cập cầu lúc chạng vạng", altProject: "Hàng siêu trường trên cầu tàu",
       altWarehouse: "Kho hàng tầng cao", altAgency: "Tàu container cập bến", altAbout: "Cảng lúc hoàng hôn",
       servicesTitle: "Dịch vụ",
       servicesLede: "Bốn dịch vụ, mỗi dịch vụ một trang. Yêu cầu giữ nguyên ngôn ngữ bạn đang đọc.",
@@ -196,6 +202,8 @@
       svcWarehouse: "Kho bãi", svcWarehouseLede: "Địa điểm, chỗ chứa, tồn kho và kho ngoài khơi.",
       svcAgency: "Đại lý tàu", svcAgencyLede: "Đại lý cảng và dịch vụ hàng hải.",
       freightTitle: "Vận tải hàng hóa",
+      freightEyebrow: "Biển · Hàng không · Bộ · Thông quan",
+      freightJumps: "Mục vận tải trên trang này",
       freightLede: "Một mối vận tải, bốn cách đi. Mỗi mục nằm trên trang này.",
       ocean: "Đường biển", oceanLede: "FCL và LCL trên các tuyến sẵn có.",
       air: "Hàng không", airLede: "Hàng phải kịp chuyến bay.",
@@ -266,6 +274,9 @@
     document.querySelectorAll("[data-i18n-alt]").forEach(function (node) {
       node.alt = t(node.getAttribute("data-i18n-alt"));
     });
+    document.querySelectorAll("[data-i18n-aria]").forEach(function (node) {
+      node.setAttribute("aria-label", t(node.getAttribute("data-i18n-aria")));
+    });
     document.querySelectorAll("[data-set-lang]").forEach(function (button) {
       button.setAttribute("aria-pressed", String(button.getAttribute("data-set-lang") === lang));
     });
@@ -311,7 +322,7 @@
           renderer: "svg",
           loop: false,
           autoplay: !reduce,
-          path: "img/ng-logo.json?v=1.3.1"
+          path: "img/ng-logo.json?v=1.3.2"
         });
         if (reduce) {
           anim.addEventListener("DOMLoaded", function () {

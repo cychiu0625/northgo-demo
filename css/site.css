@@ -195,6 +195,68 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   40% { color: #e9feff; }
 }
 .hero-cover p { max-width: 36ch; font-size: 1.25rem; }
+.hero-freight {
+  align-items: flex-end;
+  min-height: calc(100svh - 72px);
+  padding: 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+.hero-freight .hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+  object-position: 72% center;
+}
+.hero-freight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(7,26,51,0.9) 0%, rgba(7,26,51,0.62) 36%, rgba(7,26,51,0.12) 64%, rgba(7,26,51,0.28) 100%),
+    linear-gradient(180deg, rgba(7,26,51,0.18) 0%, rgba(7,26,51,0) 36%, rgba(7,26,51,0.72) 100%);
+}
+.hero-freight .wrap {
+  position: relative;
+  z-index: 1;
+  padding: clamp(48px, 10vh, 108px) 0 clamp(40px, 8vh, 84px);
+}
+.hero-freight h1 {
+  font-size: clamp(2.7rem, 6.2vw, 4.6rem);
+  max-width: 8ch;
+}
+.hero-freight .lede-line {
+  max-width: 26em;
+  font-size: 1.2rem;
+  margin-bottom: 22px;
+}
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 14px;
+}
+.hero-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.hero-links a {
+  color: #fff;
+  text-decoration: none;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.38);
+  background: rgba(7,26,51,0.35);
+}
+.hero-links a:hover { border-color: var(--cyan); color: #e9feff; }
 .split { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr); gap: 28px; align-items: center; }
 .photo { width: 100%; height: auto; aspect-ratio: 16 / 9; max-height: 420px; display: block; object-fit: cover; border-radius: 16px; background: #d7e6ef; }
 .photo.band { margin: 0 0 16px; }
@@ -273,7 +335,12 @@ textarea { min-height: 96px; resize: vertical; }
 }
 @media (max-width: 760px) {
   .hero { min-height: 70vh; }
-  .hero-cover { min-height: calc(100svh - 128px); }
+  .hero-cover, .hero-freight { min-height: calc(100svh - 128px); }
+  .hero-freight .hero-bg { object-position: 78% center; }
+  .hero-freight::before {
+    background: linear-gradient(180deg, rgba(7,26,51,0.28) 0%, rgba(7,26,51,0.45) 38%, rgba(7,26,51,0.9) 100%);
+  }
+  .hero-freight h1 { max-width: 10ch; }
   .brand-logo { height: 48px; }
   .menu { display: inline-flex; align-items: center; }
   .nav {
