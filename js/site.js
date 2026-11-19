@@ -311,7 +311,7 @@
           renderer: "svg",
           loop: false,
           autoplay: !reduce,
-          path: "img/ng-logo.json?v=1.3.0"
+          path: "img/ng-logo.json?v=1.3.1"
         });
         if (reduce) {
           anim.addEventListener("DOMLoaded", function () {
