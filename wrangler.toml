@@ -1,0 +1,9 @@
+name = "northgo-demo"
+compatibility_date = "2024-11-12"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "northgo-demo"
+database_id = "c0332930-6d13-4ab7-94b1-e11a1832c9ca"
+migrations_dir = "migrations"

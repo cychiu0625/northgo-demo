@@ -58,7 +58,7 @@
       optFreight: "貨運", optProject: "專案", optWarehouse: "倉儲", optAgency: "船務代理",
       send: "送出詢價",
       formError: "請填姓名、信箱和需求。",
-      thanks: "已記下這筆詢價。這是重建草案，不會送到 Northgo 的正式信箱。",
+      thanks: "已收到詢價，會由窗口處理。",
       taipei: "台北", taichung: "台中", kaohsiung: "高雄",
       la: "洛杉磯", hcmc: "胡志明市", tokyo: "東京", osaka: "大阪"
     },
@@ -118,7 +118,7 @@
       optFreight: "Freight", optProject: "Project", optWarehouse: "Warehouse", optAgency: "Shipping agency",
       send: "Send enquiry",
       formError: "Add your name, email, and what you need.",
-      thanks: "Enquiry noted. This is a rebuild draft, so it is not sent to Northgo.",
+      thanks: "Enquiry received. The desk will follow up.",
       taipei: "Taipei", taichung: "Taichung", kaohsiung: "Kaohsiung",
       la: "Los Angeles", hcmc: "Ho Chi Minh City", tokyo: "Tokyo", osaka: "Osaka"
     },
@@ -178,7 +178,7 @@
       optFreight: "貨物", optProject: "プロジェクト", optWarehouse: "倉庫", optAgency: "船舶代理",
       send: "送信",
       formError: "氏名、メール、要件を入力してください。",
-      thanks: "受け付けました。これは草案なので Northgo には送信されません。",
+      thanks: "受け付けました。窓口よりご連絡します。",
       taipei: "台北", taichung: "台中", kaohsiung: "高雄",
       la: "ロサンゼルス", hcmc: "ホーチミン", tokyo: "東京", osaka: "大阪"
     },
@@ -238,7 +238,7 @@
       optFreight: "Vận tải", optProject: "Dự án", optWarehouse: "Kho", optAgency: "Đại lý tàu",
       send: "Gửi yêu cầu",
       formError: "Điền họ tên, email và nhu cầu.",
-      thanks: "Đã ghi nhận. Đây là bản dựng lại, nên không gửi tới Northgo.",
+      thanks: "Đã nhận yêu cầu. Quầy sẽ liên hệ lại.",
       taipei: "Đài Bắc", taichung: "Đài Trung", kaohsiung: "Cao Hùng",
       la: "Los Angeles", hcmc: "TP. Hồ Chí Minh", tokyo: "Tokyo", osaka: "Osaka"
     }
@@ -322,7 +322,7 @@
           renderer: "svg",
           loop: false,
           autoplay: !reduce,
-          path: "img/ng-logo.json?v=1.3.2"
+          path: "img/ng-logo.json?v=1.4.0"
         });
         if (reduce) {
           anim.addEventListener("DOMLoaded", function () {

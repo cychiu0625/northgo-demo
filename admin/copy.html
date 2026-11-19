@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Northgo Admin · Form copy</title>
+  <link rel="stylesheet" href="admin.css?v=1.4.0">
+  <style>.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }</style>
+</head>
+<body data-admin="copy">
+  <div class="shell">
+    <header class="top">
+      <a class="brand" href="index.html">Northgo <span>Admin</span></a>
+      <nav class="nav" aria-label="Admin">
+        <a href="index.html" data-nav="inbox">Enquiries</a>
+        <a href="copy.html" data-nav="copy">Form copy</a>
+        <button type="button" class="btn ghost" data-logout>Sign out</button>
+      </nav>
+    </header>
+    <main>
+      <h1>Enquiry form copy</h1>
+      <p class="lede">Override contact-page enquiry labels. Leave a field blank to keep the site default for that language.</p>
+      <div class="toolbar">
+        <label>Language
+          <select id="copy-lang">
+            <option value="zh-tw">繁中</option>
+            <option value="en">EN</option>
+            <option value="ja">日本語</option>
+            <option value="vi">VI</option>
+          </select>
+        </label>
+      </div>
+      <div class="card">
+        <form id="copy-form" class="grid-copy"></form>
+        <p class="ok" id="copy-ok" hidden></p>
+        <p class="err" id="copy-err" hidden></p>
+      </div>
+    </main>
+  </div>
+  <script src="admin.js?v=1.4.0"></script>
+</body>
+</html>

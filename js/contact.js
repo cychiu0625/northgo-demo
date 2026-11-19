@@ -112,33 +112,96 @@
         renderList();
       });
     });
+    var copyOverrides = {};
+    var formBusy = false;
+
+    function enquiryText(key) {
+      if (copyOverrides[key]) return copyOverrides[key];
+      return Northgo.t(key);
+    }
+
+    function applyEnquiryCopy() {
+      var form = document.getElementById("enquiry-form");
+      if (!form) return;
+      var title = document.querySelector("#enquiry h2");
+      if (title) title.textContent = enquiryText("formTitle");
+      form.querySelectorAll("[data-i18n]").forEach(function (node) {
+        var key = node.getAttribute("data-i18n");
+        if (!key) return;
+        node.textContent = enquiryText(key);
+      });
+      var ok = document.getElementById("form-ok");
+      var error = document.getElementById("form-error");
+      if (ok && !ok.hidden) ok.textContent = enquiryText("thanks");
+      if (error && !error.hidden) error.textContent = enquiryText("formError");
+    }
+
+    function loadEnquiryCopy() {
+      return fetch("/api/enquiry-copy?lang=" + encodeURIComponent(Northgo.lang), {
+        credentials: "same-origin"
+      })
+        .then(function (res) { return res.ok ? res.json() : { copy: {} }; })
+        .then(function (data) {
+          copyOverrides = data.copy || {};
+          applyEnquiryCopy();
+        })
+        .catch(function () {
+          copyOverrides = {};
+          applyEnquiryCopy();
+        });
+    }
+
     document.getElementById("enquiry-form").addEventListener("submit", function (event) {
       event.preventDefault();
+      if (formBusy) return;
       var form = event.currentTarget;
       var error = document.getElementById("form-error");
       var ok = document.getElementById("form-ok");
       var name = form.name.value.trim();
       var email = form.email.value.trim();
       var message = form.message.value.trim();
+      var service = form.service.value;
       if (!name || !email || !message || email.indexOf("@") < 1) {
         error.hidden = false;
-        error.textContent = Northgo.t("formError");
+        error.textContent = enquiryText("formError");
         ok.hidden = true;
         return;
       }
+      formBusy = true;
       error.hidden = true;
-      ok.hidden = false;
-      ok.textContent = Northgo.t("thanks");
-      form.reset();
+      ok.hidden = true;
+      fetch("/api/enquiries", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          service: service,
+          message: message,
+          lang: Northgo.lang
+        })
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error("submit failed");
+          ok.hidden = false;
+          ok.textContent = enquiryText("thanks");
+          form.reset();
+        })
+        .catch(function () {
+          error.hidden = false;
+          error.textContent = enquiryText("formError");
+        })
+        .finally(function () {
+          formBusy = false;
+        });
     });
     Northgo.onLang = function () {
       caption();
       renderList();
-      var ok = document.getElementById("form-ok");
-      var error = document.getElementById("form-error");
-      if (!ok.hidden) ok.textContent = Northgo.t("thanks");
-      if (!error.hidden) error.textContent = Northgo.t("formError");
+      loadEnquiryCopy();
     };
+    loadEnquiryCopy();
   }
 
   document.addEventListener("DOMContentLoaded", boot);
