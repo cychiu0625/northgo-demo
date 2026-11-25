@@ -1,31 +1,51 @@
 import { json, readJson } from "../../_lib/json.js";
 import { requireAdmin } from "../../_lib/auth.js";
-import { getEnquiry, newId, validateEnquiryInput } from "../../_lib/enquiries.js";
+import {
+  ENQUIRY_STATUSES,
+  getEnquiry,
+  newId,
+  validateEnquiryInput
+} from "../../_lib/enquiries.js";
 
+/** R＝讀取清單。需已登入。預設不回已軟刪除（deleted_at 非空）的列。 */
 export async function onRequestGet(context) {
   const { request, env } = context;
   if (!(await requireAdmin(request, env))) return json({ error: "unauthorized" }, 401);
   if (!env.DB) return json({ error: "database unavailable" }, 503);
 
   const url = new URL(request.url);
-  const status = url.searchParams.get("status") || "";
-  const q = String(url.searchParams.get("q") || "").trim();
+  const status = String(url.searchParams.get("status") || "").trim();
+  const company = String(
+    url.searchParams.get("company") || url.searchParams.get("q") || ""
+  ).trim();
+  const includeDeleted = url.searchParams.get("include_deleted") === "1";
 
   let sql =
-    `SELECT id, created_at, name, email, service, message, lang, status, note
+    `SELECT id, created_at, given_name, family_name, company, email, phone,
+            country, services, message, ship_date, status, note, deleted_at, lang
      FROM enquiries`;
   const binds = [];
   const where = [];
 
-  if (status && ["new", "read", "done"].indexOf(status) >= 0) {
-    where.push("status = ?");
-    binds.push(status);
+  /* 預設隱藏軟刪除 */
+  if (!includeDeleted) {
+    where.push("deleted_at IS NULL");
   }
-  if (q) {
-    where.push("(name LIKE ? OR email LIKE ? OR message LIKE ? OR note LIKE ?)");
-    const like = "%" + q.replace(/%/g, "") + "%";
-    binds.push(like, like, like, like);
+
+  if (status) {
+    const legacy = { new: "新進", read: "處理中", done: "已回覆" };
+    const normalized = legacy[status] || status;
+    if (ENQUIRY_STATUSES.indexOf(normalized) >= 0) {
+      where.push("status = ?");
+      binds.push(normalized);
+    }
   }
+
+  if (company) {
+    where.push("company LIKE ?");
+    binds.push("%" + company.replace(/%/g, "") + "%");
+  }
+
   if (where.length) sql += " WHERE " + where.join(" AND ");
   sql += " ORDER BY created_at DESC LIMIT 200";
 
@@ -42,35 +62,50 @@ export async function onRequestPost(context) {
   const body = await readJson(request);
   if (!body) return json({ error: "invalid json" }, 400);
 
-  const parsed = validateEnquiryInput(body, false);
+  const parsed = validateEnquiryInput(
+    Object.assign({}, body, { status: body.status || "新進" }),
+    false
+  );
   if (!parsed.ok) return json({ error: "validation", fields: parsed.errors }, 400);
 
   const row = {
     id: newId(),
     created_at: new Date().toISOString(),
-    name: parsed.value.name,
+    given_name: parsed.value.given_name,
+    family_name: parsed.value.family_name || "",
+    company: parsed.value.company || "",
     email: parsed.value.email,
-    service: parsed.value.service,
-    message: parsed.value.message,
+    phone: parsed.value.phone || "",
+    country: parsed.value.country || "",
+    services: parsed.value.services || "",
+    message: parsed.value.message || "",
+    ship_date: parsed.value.ship_date || "",
     lang: parsed.value.lang || "zh-tw",
-    status: parsed.value.status || "new",
+    status: parsed.value.status || "新進",
     note: parsed.value.note || ""
   };
 
   await env.DB.prepare(
-    `INSERT INTO enquiries (id, created_at, name, email, service, message, lang, status, note)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    `INSERT INTO enquiries (
+      id, created_at, given_name, family_name, company, email, phone,
+      country, services, message, ship_date, status, note, deleted_at, lang
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?)`
   )
     .bind(
       row.id,
       row.created_at,
-      row.name,
+      row.given_name,
+      row.family_name,
+      row.company,
       row.email,
-      row.service,
+      row.phone,
+      row.country,
+      row.services,
       row.message,
-      row.lang,
+      row.ship_date,
       row.status,
-      row.note
+      row.note,
+      row.lang
     )
     .run();
 

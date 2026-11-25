@@ -112,96 +112,226 @@
         renderList();
       });
     });
-    var copyOverrides = {};
-    var formBusy = false;
+    /* 詢價表 C＝新增：POST /api/enquiries。不寄信。成功顯示句子＋編號；失敗停在原頁。 */
+    var form = document.getElementById("enquiry-form");
+    var submitBtn = document.getElementById("enquiry-submit");
+    var statusBox = document.getElementById("form-status");
+    var given = form.querySelector('[name="given-name"]');
+    if (given && !given.value) given.value = "客戶 A";
+    var busy = false;
+    var fieldKeys = {};
+    var fieldRaw = {};
+    var statusKey = "";
+    var statusRaw = "";
+    var statusKind = "";
 
-    function enquiryText(key) {
-      if (copyOverrides[key]) return copyOverrides[key];
-      return Northgo.t(key);
+    function copyText(key) {
+      var pack = window.NorthgoContent && window.NorthgoContent.fieldErrors;
+      var lang = Northgo.lang;
+      if (pack && pack[lang] && pack[lang][key]) return pack[lang][key];
+      if (pack && pack["zh-tw"] && pack["zh-tw"][key]) return pack["zh-tw"][key];
+      if (pack && pack.en && pack.en[key]) return pack.en[key];
+      return key;
     }
 
-    function applyEnquiryCopy() {
-      var form = document.getElementById("enquiry-form");
-      if (!form) return;
-      var title = document.querySelector("#enquiry h2");
-      if (title) title.textContent = enquiryText("formTitle");
-      form.querySelectorAll("[data-i18n]").forEach(function (node) {
-        var key = node.getAttribute("data-i18n");
-        if (!key) return;
-        node.textContent = enquiryText(key);
+    function clearFieldErrors() {
+      form.querySelectorAll(".field-err").forEach(function (node) {
+        node.hidden = true;
+        node.textContent = "";
       });
-      var ok = document.getElementById("form-ok");
-      var error = document.getElementById("form-error");
-      if (ok && !ok.hidden) ok.textContent = enquiryText("thanks");
-      if (error && !error.hidden) error.textContent = enquiryText("formError");
+      fieldKeys = {};
+      fieldRaw = {};
     }
 
-    function loadEnquiryCopy() {
-      return fetch("/api/enquiry-copy?lang=" + encodeURIComponent(Northgo.lang), {
-        credentials: "same-origin"
-      })
-        .then(function (res) { return res.ok ? res.json() : { copy: {} }; })
-        .then(function (data) {
-          copyOverrides = data.copy || {};
-          applyEnquiryCopy();
-        })
-        .catch(function () {
-          copyOverrides = {};
-          applyEnquiryCopy();
-        });
+    function showFieldError(name, key) {
+      var node = document.getElementById("err-" + name);
+      if (!node) return;
+      fieldKeys[name] = key;
+      delete fieldRaw[name];
+      node.textContent = copyText(key);
+      node.hidden = false;
     }
 
-    document.getElementById("enquiry-form").addEventListener("submit", function (event) {
-      event.preventDefault();
-      if (formBusy) return;
-      var form = event.currentTarget;
-      var error = document.getElementById("form-error");
-      var ok = document.getElementById("form-ok");
-      var name = form.name.value.trim();
-      var email = form.email.value.trim();
-      var message = form.message.value.trim();
-      var service = form.service.value;
-      if (!name || !email || !message || email.indexOf("@") < 1) {
-        error.hidden = false;
-        error.textContent = enquiryText("formError");
-        ok.hidden = true;
+    function showFieldMessage(name, text) {
+      var node = document.getElementById("err-" + name);
+      if (!node) return;
+      fieldRaw[name] = text;
+      delete fieldKeys[name];
+      node.textContent = text;
+      node.hidden = false;
+    }
+
+    function setStatus(key, kind) {
+      statusKey = key || "";
+      statusRaw = "";
+      statusKind = kind || "";
+      if (!statusBox) return;
+      if (!key) {
+        statusBox.hidden = true;
+        statusBox.textContent = "";
+        statusBox.classList.remove("is-ok", "is-err");
         return;
       }
-      formBusy = true;
-      error.hidden = true;
-      ok.hidden = true;
+      statusBox.textContent = copyText(key);
+      statusBox.hidden = false;
+      statusBox.classList.toggle("is-ok", kind === "ok");
+      statusBox.classList.toggle("is-err", kind === "err");
+    }
+
+    function setStatusText(text, kind) {
+      statusKey = "";
+      statusRaw = text || "";
+      statusKind = kind || "";
+      if (!statusBox) return;
+      if (!text) {
+        statusBox.hidden = true;
+        statusBox.textContent = "";
+        statusBox.classList.remove("is-ok", "is-err");
+        return;
+      }
+      statusBox.textContent = text;
+      statusBox.hidden = false;
+      statusBox.classList.toggle("is-ok", kind === "ok");
+      statusBox.classList.toggle("is-err", kind === "err");
+    }
+
+    function setBusy(on) {
+      busy = on;
+      if (!submitBtn) return;
+      submitBtn.disabled = on;
+      submitBtn.textContent = copyText(on ? "formSending" : "formSend");
+    }
+
+    function refreshCopy() {
+      Object.keys(fieldKeys).forEach(function (name) {
+        var node = document.getElementById("err-" + name);
+        if (node && !node.hidden) node.textContent = copyText(fieldKeys[name]);
+      });
+      Object.keys(fieldRaw).forEach(function (name) {
+        var node = document.getElementById("err-" + name);
+        if (node && !node.hidden) node.textContent = fieldRaw[name];
+      });
+      if (statusRaw) setStatusText(statusRaw, statusKind);
+      else if (statusKey) setStatus(statusKey, statusKind);
+      if (submitBtn && !busy) submitBtn.textContent = copyText("formSend");
+      if (submitBtn && busy) submitBtn.textContent = copyText("formSending");
+    }
+
+    function emailLooksOk(value) {
+      var at = value.indexOf("@");
+      if (at < 1 || at >= value.length - 1) return false;
+      var domain = value.slice(at + 1);
+      return domain.indexOf(".") > 0 && domain.indexOf(".") < domain.length - 1;
+    }
+
+    function collectPayload() {
+      var fields = form.elements;
+      var services = [];
+      form.querySelectorAll('[name="services"]:checked').forEach(function (box) {
+        services.push(box.value);
+      });
+      return {
+        "given-name": String(fields.namedItem("given-name") && fields.namedItem("given-name").value || "").trim(),
+        "family-name": String(fields.namedItem("family-name") && fields.namedItem("family-name").value || "").trim(),
+        company: String(fields.namedItem("company") && fields.namedItem("company").value || "").trim(),
+        email: String(fields.namedItem("email") && fields.namedItem("email").value || "").trim(),
+        phone: String(fields.namedItem("phone") && fields.namedItem("phone").value || "").trim(),
+        country: String(fields.namedItem("country") && fields.namedItem("country").value || "").trim(),
+        services: services,
+        message: String(fields.namedItem("message") && fields.namedItem("message").value || ""),
+        "ship-date": String(fields.namedItem("ship-date") && fields.namedItem("ship-date").value || "").trim(),
+        terms: !!(fields.namedItem("terms") && fields.namedItem("terms").checked)
+      };
+    }
+
+    function focusFirstError() {
+      var order = ["given-name", "family-name", "company", "email", "phone", "message", "terms"];
+      var i;
+      for (i = 0; i < order.length; i += 1) {
+        if (fieldKeys[order[i]] || fieldRaw[order[i]]) {
+          var el = form.elements.namedItem(order[i]);
+          if (el && el.focus) el.focus();
+          return;
+        }
+      }
+    }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      if (busy) return;
+
+      var payload = collectPayload();
+      var firstBad = null;
+
+      clearFieldErrors();
+      setStatus("", "");
+
+      function fail(name, key) {
+        showFieldError(name, key);
+        if (!firstBad) firstBad = form.elements.namedItem(name);
+      }
+
+      if (!payload["given-name"]) fail("given-name", "fieldCheck");
+      if (!payload["family-name"]) fail("family-name", "fieldCheck");
+      if (!payload.company) fail("company", "fieldCheck");
+      if (!payload.email) fail("email", "fieldCheck");
+      else if (!emailLooksOk(payload.email)) fail("email", "emailInvalid");
+      if (!payload.phone) fail("phone", "fieldCheck");
+      if (payload.message.length > 4000) fail("message", "messageTooLong");
+      if (!payload.terms) fail("terms", "fieldCheck");
+
+      if (firstBad) {
+        setStatus("formFixFields", "err");
+        if (firstBad.focus) firstBad.focus();
+        return;
+      }
+
+      /* C：POST 新增一筆。不寄信；狀態由伺服器預設「新進」。試的時候只用假資料「客戶 A」。 */
+      setBusy(true);
       fetch("/api/enquiries", {
         method: "POST",
-        credentials: "same-origin",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          name: name,
-          email: email,
-          service: service,
-          message: message,
-          lang: Northgo.lang
-        })
+        body: JSON.stringify(payload)
       })
         .then(function (res) {
-          if (!res.ok) throw new Error("submit failed");
-          ok.hidden = false;
-          ok.textContent = enquiryText("thanks");
-          form.reset();
+          return res.json().then(function (data) {
+            return { ok: res.ok, status: res.status, data: data || {} };
+          }).catch(function () {
+            return { ok: false, status: res.status, data: {} };
+          });
+        })
+        .then(function (result) {
+          setBusy(false);
+          var data = result.data;
+          if (result.ok && data.ok && data.id) {
+            var line = (data.message || copyText("formSuccess")) + " " + data.id;
+            setStatusText(line, "ok");
+            form.reset();
+            clearFieldErrors();
+            if (given) given.value = "客戶 A";
+            return;
+          }
+          if (data.fields && typeof data.fields === "object") {
+            Object.keys(data.fields).forEach(function (name) {
+              showFieldMessage(name, data.fields[name]);
+            });
+            setStatusText(data.message || copyText("formFixFields"), "err");
+            focusFirstError();
+            return;
+          }
+          setStatus("formFail", "err");
         })
         .catch(function () {
-          error.hidden = false;
-          error.textContent = enquiryText("formError");
-        })
-        .finally(function () {
-          formBusy = false;
+          setBusy(false);
+          setStatus("formFail", "err");
         });
     });
     Northgo.onLang = function () {
       caption();
       renderList();
-      loadEnquiryCopy();
+      refreshCopy();
     };
-    loadEnquiryCopy();
+    refreshCopy();
   }
 
   document.addEventListener("DOMContentLoaded", boot);

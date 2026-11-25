@@ -15,7 +15,7 @@ export const COPY_KEYS = [
 
 export const LANGS = ["zh-tw", "en", "ja", "vi"];
 
-export const SERVICES = ["freight", "project", "warehouse", "agency"];
+export const SERVICES = ["freight", "project", "warehouse", "agency", "other"];
 
 export async function loadCopy(db, lang) {
   const rows = await db

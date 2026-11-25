@@ -1,26 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>Northgo Admin · Login</title>
-  <link rel="stylesheet" href="admin.css?v=1.4.2">
+  <title>Northgo Admin · 登入</title>
+  <link rel="stylesheet" href="admin.css?v=1.7.1">
 </head>
 <body data-admin="login">
   <div class="login-wrap">
     <div class="login-card">
-      <h1>Northgo Admin</h1>
-      <p class="lede">登入後可管理客戶詢問與表單文案。</p>
+      <p class="login-kicker">Northgo Admin</p>
+      <h1>後台登入</h1>
+      <p class="lede">登入後可管理前台送來的客戶詢問，以及詢價表單文案。</p>
       <form id="login-form">
-        <label>密碼
-          <input name="password" type="password" autocomplete="current-password" required>
+        <label>管理密碼
+          <input name="password" type="password" autocomplete="current-password" required autofocus>
         </label>
         <p class="err" id="login-error" hidden></p>
-        <button class="btn primary" type="submit">登入</button>
+        <button class="btn primary" type="submit">進入後台</button>
       </form>
+      <p class="login-foot"><a href="../index.html">返回前台</a></p>
     </div>
   </div>
-  <script src="admin.js?v=1.4.2"></script>
+  <script src="admin.js?v=1.7.1"></script>
 </body>
 </html>

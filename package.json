@@ -1,0 +1,11 @@
+{
+  "name": "northgo-w3",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync": "node scripts/sync-dist.mjs",
+    "dev": "node scripts/sync-dist.mjs && wrangler pages dev dist --local --port 8788",
+    "migrate:local": "wrangler d1 migrations apply northgo-demo --local",
+    "check": "node acceptance/run-plan-check.mjs"
+  }
+}

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Northgo</title>
-  <link rel="stylesheet" href="css/site.css?v=1.4.2">
+  <link rel="stylesheet" href="css/site.css?v=1.7.1">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body data-page="contact" data-title-key="contactTitle">
@@ -55,24 +55,86 @@
       </div>
     </section>
     <section class="section" id="enquiry">
-      <div class="wrap" style="max-width:640px">
-        <h2 data-i18n="formTitle">詢價</h2>
-        <form id="enquiry-form" novalidate>
-          <label><span data-i18n="name">姓名</span><input name="name" autocomplete="name" required></label>
-          <label><span data-i18n="email">信箱</span><input name="email" type="email" autocomplete="email" required></label>
-          <label><span data-i18n="service">服務</span>
-            <select name="service">
-              <option value="freight" data-i18n="optFreight"></option>
-              <option value="project" data-i18n="optProject"></option>
-              <option value="warehouse" data-i18n="optWarehouse"></option>
-              <option value="agency" data-i18n="optAgency"></option>
+      <div class="wrap enquiry-sheet">
+        <h2>詢價表</h2>
+        <p class="note">想問貨運的客戶在這裡填。請用假資料「客戶 A」。按「送出詢問」會新增一筆詢價（不寄信）；成功會顯示句子與編號。</p>
+        <form id="enquiry-form" action="#enquiry" method="post" novalidate>
+          <div class="pair">
+            <label>
+              <span>名 <abbr class="req" title="必填">*</abbr></span>
+              <input name="given-name" autocomplete="given-name" placeholder="客戶 A" required aria-describedby="err-given-name">
+              <span class="field-err" id="err-given-name" hidden></span>
+            </label>
+            <label>
+              <span>姓 <abbr class="req" title="必填">*</abbr></span>
+              <input name="family-name" autocomplete="family-name" required aria-describedby="err-family-name">
+              <span class="field-err" id="err-family-name" hidden></span>
+            </label>
+          </div>
+          <label>
+            <span>公司 <abbr class="req" title="必填">*</abbr></span>
+            <input name="company" autocomplete="organization" required aria-describedby="err-company">
+            <span class="field-err" id="err-company" hidden></span>
+          </label>
+          <label>
+            <span>電子郵件 <abbr class="req" title="必填">*</abbr></span>
+            <input name="email" type="email" autocomplete="email" required aria-describedby="err-email">
+            <span class="field-err" id="err-email" hidden></span>
+          </label>
+          <label>
+            <span>電話 <abbr class="req" title="必填">*</abbr></span>
+            <input name="phone" type="tel" autocomplete="tel" required aria-describedby="err-phone">
+            <span class="field-err" id="err-phone" hidden></span>
+          </label>
+          <label><span>國家</span>
+            <select name="country">
+              <option value="">可不選</option>
+              <option>台灣</option>
+              <option>日本</option>
+              <option>越南</option>
+              <option>中國</option>
+              <option>香港</option>
+              <option>新加坡</option>
+              <option>馬來西亞</option>
+              <option>泰國</option>
+              <option>印尼</option>
+              <option>菲律賓</option>
+              <option>韓國</option>
+              <option>印度</option>
+              <option>美國</option>
+              <option>加拿大</option>
+              <option>墨西哥</option>
+              <option>英國</option>
+              <option>德國</option>
+              <option>法國</option>
+              <option>荷蘭</option>
+              <option>澳洲</option>
+              <option>紐西蘭</option>
             </select>
           </label>
-          <label><span data-i18n="message">需求</span><textarea name="message" required></textarea></label>
-          <p class="err" id="form-error" hidden></p>
-          <button class="btn navy" type="submit" data-i18n="send">送出詢價</button>
+          <fieldset>
+            <legend>有興趣的服務</legend>
+            <div class="checks">
+              <label><input type="checkbox" name="services" value="freight">貨運物流</label>
+              <label><input type="checkbox" name="services" value="project">專案物流</label>
+              <label><input type="checkbox" name="services" value="warehouse">倉儲物流</label>
+              <label><input type="checkbox" name="services" value="agency">船務代理</label>
+              <label><input type="checkbox" name="services" value="other">其他</label>
+            </div>
+          </fieldset>
+          <label>
+            <span>訊息</span>
+            <textarea name="message" aria-describedby="err-message"></textarea>
+            <span class="field-err" id="err-message" hidden></span>
+          </label>
+          <label><span>預計出貨時間</span><input name="ship-date" type="date"></label>
+          <div class="terms-wrap">
+            <label class="terms"><input type="checkbox" name="terms" required aria-describedby="err-terms"><span>我接受條款 <abbr class="req" title="必填">*</abbr></span></label>
+            <span class="field-err" id="err-terms" hidden></span>
+          </div>
+          <button class="btn navy" type="submit" id="enquiry-submit">送出詢問</button>
         </form>
-        <p class="ok" id="form-ok" hidden></p>
+        <p class="form-status" id="form-status" role="status" aria-live="polite" hidden></p>
       </div>
     </section>
   </main>
@@ -84,7 +146,8 @@
     </div>
   </footer>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="js/site.js?v=1.4.2"></script>
-  <script src="js/contact.js?v=1.4.2"></script>
+  <script src="js/site.js?v=1.7.1"></script>
+  <script src="content/site.js?v=1.7.1"></script>
+  <script src="js/contact.js?v=1.7.1"></script>
 </body>
 </html>

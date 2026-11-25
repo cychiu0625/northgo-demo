@@ -1,12 +1,16 @@
 import { json, readJson } from "../../_lib/json.js";
 import { requireAdmin } from "../../_lib/auth.js";
 import { COPY_KEYS, LANGS, loadAllCopy } from "../../_lib/copy.js";
+import { enquiryDefaults } from "../../_lib/defaults.js";
 
 export async function onRequestGet(context) {
   const { request, env } = context;
   if (!(await requireAdmin(request, env))) return json({ error: "unauthorized" }, 401);
   if (!env.DB) return json({ error: "database unavailable" }, 503);
-  return json({ copy: await loadAllCopy(env.DB) });
+  return json({
+    copy: await loadAllCopy(env.DB),
+    defaults: enquiryDefaults()
+  });
 }
 
 export async function onRequestPut(context) {
